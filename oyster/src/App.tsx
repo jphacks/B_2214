@@ -1,8 +1,17 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { useEffect, useState } from "react";
+import DrawCanvas from "./DrawCanvas";
 
 function App() {
+  const [points, setPoint] = useState();
+
+  const onChange = (data:any) => {
+    setPoint(data);
+    console.log(points);
+  };
+  
   return (
     <div className="App">
       <header className="App-header">
@@ -19,6 +28,7 @@ function App() {
           Learn React
         </a>
       </header>
+      <DrawCanvas initialData={points} onChange={onChange} />
     </div>
   );
 }
