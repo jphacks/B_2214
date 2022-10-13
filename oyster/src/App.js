@@ -1,12 +1,17 @@
 import './App.css';
 import { useState } from "react";
 import DrawCanvas from "./components/DrawCanvas";
+import React, {useCallback} from 'react'
+import {useDropzone} from 'react-dropzone'
 
 function App() {
   const [points, setPoint] = useState();
   const [pixelArea, setPixelArea] = useState(0);
   const [inputArea, setInputArea] = useState(0);
   const [scale, setScale] = useState(0);
+  const img = new Image();
+  const [imageFile, setImageFile] = useState();
+  const [imageSize, setImageSize] = useState();
   var area = require('area-polygon')
 
   // metrics selection
@@ -42,8 +47,36 @@ function App() {
 
   }
 
+  // drag and drop
+  const onDrop = useCallback((acceptedFiles) => {
+    acceptedFiles.forEach((file) => {
+      console.log(URL.createObjectURL(file))
+      setImageFile(URL.createObjectURL(file))
+      img.src = URL.createObjectURL(file)
+      img.onload = () => {
+        setImageSize({
+          height: img.height,
+          width: img.width
+        });
+        console.log(img.height);
+        console.log(img.width);
+      };
+    })
+  }, [])
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+
   return (
     <div className="App">
+      <div {...getRootProps()}>
+        <input {...getInputProps()} />
+        {
+          isDragActive ?
+            <p>Drop the files here ...</p> :
+            <p>Drag 'n' drop some files here, or click to select files</p>
+        }
+      </div>
+      <img src={imageFile} />
+
       <DrawCanvas initialData={points} onChange={onChange} />
       <p>{pixelArea} pixels</p>
 
