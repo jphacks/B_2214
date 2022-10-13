@@ -1,11 +1,9 @@
 import { MantineProvider} from "@mantine/core"
-import TopPage from "../components";
 
-
-function App() {
+function App({children}) {
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS >
-      <TopPage/>
+      {children}
     </MantineProvider>
   );
 }
