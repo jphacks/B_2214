@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Canvas from "react-canvas-polygons";
 
-const DrawCanvas = ({ initialData, onChange }, ref) => {
+const DrawCanvasSection = ({ initialData, onChange }, ref) => {
   const [tool, setTool] = useState("Line");
   const handleCleanCanva = (e) => {
     e.stopPropagation();
@@ -40,4 +40,4 @@ const DrawCanvas = ({ initialData, onChange }, ref) => {
   );
 };
 
-export default DrawCanvas;
+export default DrawCanvasSection;
