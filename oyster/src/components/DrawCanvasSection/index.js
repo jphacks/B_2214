@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Canvas from "react-canvas-polygons";
 
-const DrawCanvasSection = ({ initialData, onChange }, ref) => {
+const DrawCanvasSection = ({imageFile, imageSize, initialData, onChange }, ref) => {
   const [tool, setTool] = useState("Line");
   const handleCleanCanva = (e) => {
     e.stopPropagation();
@@ -25,9 +25,9 @@ const DrawCanvasSection = ({ initialData, onChange }, ref) => {
       </button>
       <Canvas
         ref={(canvas) => (ref = canvas)}
-        imgSrc="https://images.globalindustrial.com/images/enlarge/695511.jpg?t=1628284125430"
-        height={800}
-        width={800}
+        imgSrc={imageFile}
+        height={imageSize.height}
+        width={imageSize.width}
         tool={tool}
         onDataUpdate={(data) => onChange(data)}
         onFinishDraw={(data) => {
