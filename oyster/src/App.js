@@ -5,7 +5,7 @@ import DrawCanvas from "./components/DrawCanvas";
 function App() {
   const [points, setPoint] = useState();
 
-  const onChange = (data:any) => {
+  const onChange = (data) => {
     setPoint(data);
     console.log(points);
   };
