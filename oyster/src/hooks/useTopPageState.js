@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
-import { WithoutProviderError } from '../../../modules/utils/error';
 import { topPageStateContext } from '../contexts/TopPageStateContext';
+import { WithoutProviderError } from '../utils/error';
 
 export const useTopPageState = () => {
   const context = useContext(topPageStateContext);

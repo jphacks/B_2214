@@ -11,7 +11,7 @@ export const TopPageStateProvider = (props) => {
   const [scale, setScale] = useState(0);
   const [imageFile, setImageFile] = useState();
   const [imageSize, setImageSize] = useState();
-  const area = require('area-polygon');
+
 
   // metrics selection
   const options = [
@@ -20,19 +20,7 @@ export const TopPageStateProvider = (props) => {
   ];
   const [selectedMetric, setSelectedMetric] = useState(options[0].value);
 
-  // get point data and calculate how many pixels are in the polygon
-  const canvasClick = (data) => {
-    setPoint(data);
-    console.log(points);
-    if (
-      points &&
-      Object.keys(points).length > 1 &&
-      points[String(Object.keys(points)[1])].length > 2
-    ) {
-      setPixelArea(area(points[String(Object.keys(points)[1])]));
-      console.log(area(points[String(Object.keys(points)[1])]));
-    }
-  };
+
 
   return (
     <topPageStateContext.Provider
@@ -54,8 +42,6 @@ export const TopPageStateProvider = (props) => {
         setSelectedMetric,
         // objects
         options,
-        // func
-        canvasClick,
       }}
     >
       {children}

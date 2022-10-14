@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
-import { useTopPageState } from '../../hoooks/useTopPageState';
+import { useTopPageState } from '../../hooks/useTopPageState';
 
 const DropImageSection = () => {
   const { imageSize, setImageFile, setImageSize } = useTopPageState();
@@ -44,7 +44,7 @@ const DropImageSection = () => {
           {isDragActive ? (
             <p>Drop the image here ...</p>
           ) : (
-            <p>Drag &aposn drop the image here, or click to select the image</p>
+            <p>Drag and drop the image here, or click to select the image</p>
           )}
         </div>
       )}
