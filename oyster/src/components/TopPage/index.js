@@ -19,7 +19,7 @@ const TopPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({"image": "https://github.com/pytorch/hub/raw/master/images/dog.jpg"})
+        body: JSON.stringify({instances: [{"image": "https://github.com/pytorch/hub/raw/master/images/dog.jpg"}]})
       };
       fetch('http://localhost:8080/predict', requestOptions)
       .then((response) => response.json())

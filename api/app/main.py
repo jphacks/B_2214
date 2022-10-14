@@ -43,7 +43,7 @@ def is_alive():
 def predict():
     print("/predict request")
     req_json = request.get_json()
-    url = req_json["image"]
+    url = req_json["instances"][0]["image"]
     print(url)
     filename = "test.png"
     try: urllib.URLopener().retrieve(url, filename)
