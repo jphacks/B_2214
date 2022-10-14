@@ -63,10 +63,16 @@ const TopPage = () => {
       };
     })
   }, [])
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({
+    accept: {
+      'image/jpeg': [],
+      'image/png': []
+    },
+    onDrop})
 
   return (
     <div>
+      
       <div {...getRootProps()}>
         <input {...getInputProps()} />
         {
@@ -76,8 +82,7 @@ const TopPage = () => {
         }
       </div>
 
-      {imageSize&&<DrawCanvasSection imageFile={imageFile} imageSize={imageSize} initialData={points} onChange={onChange} />
-      }
+      {imageSize&&<DrawCanvasSection imageFile={imageFile} imageSize={imageSize} initialData={points} onChange={onChange} />}
       <p>{pixelArea} pixels</p>
 
 
