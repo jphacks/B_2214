@@ -7,7 +7,7 @@ import {useDropzone} from 'react-dropzone'
 const TopPage = () => {
   const [points, setPoint] = useState();
   const [pixelArea, setPixelArea] = useState(0);
-  const [inputArea, setInputArea] = useState(0);
+  const [inputArea, setInputArea] = useState('');
   const [scale, setScale] = useState(0);
   const [imageFile, setImageFile] = useState();
   const [imageSize, setImageSize] = useState();
@@ -86,16 +86,17 @@ const TopPage = () => {
           <input {...getInputProps()} />
           {
             isDragActive ?
-              <p>Drop the files here ...</p> :
-              <p>Drag 'n' drop some files here, or click to select files</p>
+              <p>Drop the image here ...</p> :
+              <p>Drag 'n' drop the image here, or click to select the image</p>
           }
         </div>
       }
 
-      <p>{pixelArea} pixels</p>
+      <p>total pixels in the polygon is {pixelArea} pixels</p>
 
 
       <input
+        type="number"
         value={inputArea}
         onChange={(event) => setInputArea(event.target.value)}
       />
@@ -109,7 +110,7 @@ const TopPage = () => {
       <button onClick={onClickCalc}>calc</button>
 
 
-      <p>{scale} {selectedMetric} / pixel</p>
+      <p>scale is {scale} {selectedMetric} / pixel</p>
     </div>
   );
 };
