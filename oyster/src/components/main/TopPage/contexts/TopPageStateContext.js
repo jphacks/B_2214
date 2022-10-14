@@ -1,4 +1,4 @@
-import { createContext, useState, useCallback } from 'react';
+import { createContext, useState } from 'react';
 
 export const topPageStateContext = createContext(undefined);
 
@@ -19,13 +19,9 @@ export const TopPageStateProvider = (props) => {
     { value: 'jyo', text: '帖' },
   ];
   const [selectedMetric, setSelectedMetric] = useState(options[0].value);
-  const handleChange = (event) => {
-    console.log(event.target.value);
-    setSelectedMetric(event.target.value);
-  };
 
   // get point data and calculate how many pixels are in the polygon
-  const onChange = (data) => {
+  const canvasClick = (data) => {
     setPoint(data);
     console.log(points);
     if (
@@ -38,38 +34,10 @@ export const TopPageStateProvider = (props) => {
     }
   };
 
-  // calculate scale
-  const onClickCalc = () => {
-    if (selectedMetric === 'm2') {
-      setScale(inputArea / pixelArea);
-      console.log(inputArea / pixelArea);
-    } else {
-      setScale((1.62 * inputArea) / pixelArea);
-      console.log((1.62 * inputArea) / pixelArea);
-    }
-  };
-
-  // drag and drop
-  const onDrop = useCallback((acceptedFiles) => {
-    acceptedFiles.forEach((file) => {
-      const img = new Image();
-      console.log(URL.createObjectURL(file));
-      setImageFile(URL.createObjectURL(file));
-      img.src = URL.createObjectURL(file);
-      img.onload = () => {
-        setImageSize({
-          height: img.height,
-          width: img.width,
-        });
-        console.log(img.height);
-        console.log(img.width);
-      };
-    });
-  }, []);
-
   return (
     <topPageStateContext.Provider
       value={{
+        // state
         points,
         setPoint,
         pixelArea,
@@ -82,13 +50,12 @@ export const TopPageStateProvider = (props) => {
         setImageFile,
         imageSize,
         setImageSize,
-        options,
         selectedMetric,
         setSelectedMetric,
-        handleChange,
-        onChange,
-        onClickCalc,
-        onDrop,
+        // objects
+        options,
+        // func
+        canvasClick,
       }}
     >
       {children}
