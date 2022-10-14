@@ -1,16 +1,17 @@
 import { useState } from 'react';
+
 import DrawCanvasSection from './DrawCanvasSection';
 
 const TopPage = () => {
-    const [points, setPoint] = useState();
-    const onChange = (data) => {
-      setPoint(data);
-      console.log(points);
-    };
+  const [points, setPoint] = useState();
+  const onChange = (data) => {
+    setPoint(data);
+    console.log(points);
+  };
 
   return (
     <>
-        <DrawCanvasSection initialData={points} onChange={onChange}/>
+      <DrawCanvasSection initialData={points} onChange={onChange} />
     </>
   );
 };

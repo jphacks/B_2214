@@ -1,8 +1,8 @@
-import { MantineProvider} from "@mantine/core"
+import { MantineProvider } from '@mantine/core';
 
-function App({children}) {
+function App({ children }) {
   return (
-    <MantineProvider withGlobalStyles withNormalizeCSS >
+    <MantineProvider withGlobalStyles withNormalizeCSS>
       {children}
     </MantineProvider>
   );

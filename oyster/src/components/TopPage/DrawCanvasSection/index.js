@@ -1,24 +1,24 @@
-import { useEffect, useState } from "react";
-import Canvas from "react-canvas-polygons";
+import { useEffect, useState } from 'react';
+import Canvas from 'react-canvas-polygons';
 
 const DrawCanvasSection = ({ initialData, onChange }, ref) => {
-  const [tool, setTool] = useState("Line");
+  const [tool, setTool] = useState('Line');
   const handleCleanCanva = (e) => {
     e.stopPropagation();
     ref.cleanCanvas();
-    setTool("Line");
-    const timeout = setTimeout(() => setTool("Polygon"), 50);
+    setTool('Line');
+    const timeout = setTimeout(() => setTool('Polygon'), 50);
     return () => clearTimeout(timeout);
   };
   useEffect(() => {
-    const timeout = setTimeout(() => setTool("Polygon"), 50);
+    const timeout = setTimeout(() => setTool('Polygon'), 50);
     return () => clearTimeout(timeout);
   }, []);
   return (
     <div>
       <button
-        variant="outlined"
-        style={{ marginBottom: "20px" }}
+        // variant="outlined"
+        style={{ marginBottom: '20px' }}
         onClick={handleCleanCanva}
       >
         Clean Canvas
@@ -32,7 +32,8 @@ const DrawCanvasSection = ({ initialData, onChange }, ref) => {
         onDataUpdate={(data) => onChange(data)}
         onFinishDraw={(data) => {
           onChange(data);
-          console.log("finish draw");}}
+          console.log('finish draw');
+        }}
         // onFinishDraw={() => console.log("finish draw")}
         initialData={initialData}
       />
