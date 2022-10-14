@@ -4,21 +4,27 @@ import Canvas from "react-canvas-polygons";
 const DrawCanvasSection = ({imageFile, imageSize, initialData, onChange }, ref) => {
   const [tool, setTool] = useState("Line");
   const handleCleanCanva = (e) => {
-    e.stopPropagation();
+    e?.stopPropagation();
     ref.cleanCanvas();
     setTool("Line");
     const timeout = setTimeout(() => setTool("Polygon"), 50);
     return () => clearTimeout(timeout);
   };
+
+  // need this after change of image
+  useEffect(() => {
+    handleCleanCanva();
+  }, [imageSize])
+
+  // not sure what this is
   useEffect(() => {
     const timeout = setTimeout(() => setTool("Polygon"), 50);
     return () => clearTimeout(timeout);
   }, []);
+
   return (
     <div>
       <button
-        variant="outlined"
-        style={{ marginBottom: "20px" }}
         onClick={handleCleanCanva}
       >
         Clean Canvas
@@ -33,7 +39,6 @@ const DrawCanvasSection = ({imageFile, imageSize, initialData, onChange }, ref) 
         onFinishDraw={(data) => {
           onChange(data);
           console.log("finish draw");}}
-        // onFinishDraw={() => console.log("finish draw")}
         initialData={initialData}
       />
     </div>
