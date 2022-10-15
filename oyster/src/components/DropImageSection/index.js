@@ -18,7 +18,7 @@ const DropImageSection = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
       'image/jpeg': [],
-      'image/png': [],
+      // 'image/png': [],
     },
     onDrop,
   });
