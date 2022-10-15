@@ -1,6 +1,5 @@
-import { materialColors } from '../modules/mantine/materialColors';
-
 import { breakpoints } from './breakpoints';
+import { materialColors } from './colors';
 import { fonts } from './fonts';
 import { spacing } from './spacing';
 
