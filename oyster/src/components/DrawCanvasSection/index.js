@@ -1,10 +1,41 @@
+import { createStyles, Button, Container } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import Canvas from 'react-canvas-polygons';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
 
+const useStyles = createStyles((theme) => ({
+  root: {
+    width: '100%',
+    maxWidth: theme.breakpoints.xl,
+    margin: '0',
+    padding: `${theme.spacing.xl}px ${theme.spacing.xl}px ${theme.spacing.md}px`,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.gray[0],
+    [theme.fn.smallerThan('md')]: {
+      padding: `${theme.spacing.md}px ${theme.spacing.sm}px ${theme.spacing.md}px`,
+    },
+  },
+  container: {
+    backgroundColor: theme.colors.blue[0],
+    padding: theme.spacing.lg,
+    gap: theme.spacing.md,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: theme.radius.md,
+  },
+}));
+
 const DrawCanvasSection = (ref) => {
-  const { points, imageFile, imageSize, setPoint, setPixelArea } = useTopPageState();
+  const { classes } = useStyles();
+
+  const { points, imageFile, imageSize, setPoint, setPixelArea } =
+    useTopPageState();
 
   const [tool, setTool] = useState('Line');
   const handleCleanCanva = (e) => {
@@ -17,7 +48,7 @@ const DrawCanvasSection = (ref) => {
 
   // need this after change of image
   useEffect(() => {
-    imageSize&&handleCleanCanva();
+    imageSize && handleCleanCanva();
   }, [imageSize]);
 
   // not sure what this is
@@ -42,26 +73,35 @@ const DrawCanvasSection = (ref) => {
   };
 
   return (
-    <div>
-      {imageSize&&
-        <div>
-            <button onClick={handleCleanCanva}>Clean Canvas</button>
+    <>
+      {imageSize ? (
+        <div className={classes.root}>
+          <Container className={classes.container}>
             <Canvas
-            ref={(canvas) => (ref = canvas)}
-            imgSrc={imageFile}
-            height={imageSize.height}
-            width={imageSize.width}
-            tool={tool}
-            onDataUpdate={(data) => canvasClick(data)}
-            onFinishDraw={(data) => {
-              canvasClick(data);
-              console.log('finish draw');
-            }}
-            initialData={points}
-          />
+              ref={(canvas) => (ref = canvas)}
+              imgSrc={imageFile}
+              height={imageSize.height}
+              width={imageSize.width}
+              tool={tool}
+              onDataUpdate={(data) => canvasClick(data)}
+              onFinishDraw={(data) => {
+                canvasClick(data);
+                console.log('finish draw');
+              }}
+              initialData={points}
+            />
+            <Button
+              size="xl"
+              color="orange"
+              radius="lg"
+              onClick={handleCleanCanva}
+            >
+              Clean Canvas
+            </Button>
+          </Container>
         </div>
-      }
-    </div>
+      ) : null}
+    </>
   );
 };
 
