@@ -1,10 +1,12 @@
+import { setDoc } from "firebase/firestore";
 import { useEffect, useState } from 'react';
 import Canvas from 'react-canvas-polygons';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
+import Predict from '../Predict';
 
 const DrawCanvasSection = (ref) => {
-  const { points, imageFile, imageSize, setPoint, setPixelArea } = useTopPageState();
+  const { points, imageFile, imageSize, setPoint, setPixelArea, annotationRef } = useTopPageState();
 
   const [tool, setTool] = useState('Line');
   const handleCleanCanva = (e) => {
@@ -28,7 +30,7 @@ const DrawCanvasSection = (ref) => {
 
   // get point data and calculate how many pixels are in the polygon
   const area = require('area-polygon');
-  const canvasClick = (data) => {
+  const canvasClick = async (data) => {
     setPoint(data);
     console.log(points);
     if (
@@ -38,6 +40,11 @@ const DrawCanvasSection = (ref) => {
     ) {
       setPixelArea(area(points[String(Object.keys(points)[1])]));
       console.log(area(points[String(Object.keys(points)[1])]));
+      const info = {
+        imageSrc: imageFile,
+        points: String(points[String(Object.keys(points)[1])])
+      }
+      await setDoc(annotationRef, info);
     }
   };
 
@@ -59,6 +66,7 @@ const DrawCanvasSection = (ref) => {
             }}
             initialData={points}
           />
+        <Predict imageUrl={imageFile}/>
         </div>
       }
     </div>
