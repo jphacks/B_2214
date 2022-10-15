@@ -1,13 +1,14 @@
+import { collection, doc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
-import { storage, STATE_CHANGED } from '../../utils/firebase';
+import { db, storage, STATE_CHANGED } from '../../utils/firebase';
 
 
 const DropImageSection = () => {
-  const { imageSize, setImageFile, setImageSize } = useTopPageState();
+  const { imageSize, setImageFile, setImageSize, setAnnotationRef } = useTopPageState();
 
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
@@ -23,7 +24,17 @@ const DropImageSection = () => {
     onDrop,
   });
 
+  // random string generator
+  const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  function generateString(length) {
+      let result = ' ';
+      const charactersLength = characters.length;
+      for ( let i = 0; i < length; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
 
+      return result;
+  }
 
   // Uploads images to Firebase Storage
   const [uploading, setUploading] = useState(false);
@@ -36,7 +47,7 @@ const DropImageSection = () => {
     const extension = file.type.split('/')[1];
 
     // Makes reference to the storage bucket location
-    const fileRef = ref(storage, `uploads/${Date.now()}.${extension}`);
+    const fileRef = ref(storage, `images/${generateString(20)}.${extension}`);
     setUploading(true);
 
     // Starts the upload
@@ -65,6 +76,7 @@ const DropImageSection = () => {
           console.log(img.height);
           console.log(img.width);
         };
+        setAnnotationRef(doc(collection(db, "annotation")))
       });
   };
 
