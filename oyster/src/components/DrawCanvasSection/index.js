@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Canvas from 'react-canvas-polygons';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
+import Predict from '../Predict';
 
 const DrawCanvasSection = (ref) => {
   const { points, imageFile, imageSize, setPoint, setPixelArea } = useTopPageState();
@@ -59,6 +60,7 @@ const DrawCanvasSection = (ref) => {
             }}
             initialData={points}
           />
+        <Predict imageUrl={imageFile}/>
         </div>
       }
     </div>

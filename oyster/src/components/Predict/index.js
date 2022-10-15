@@ -2,15 +2,16 @@ import { useEffect, useState } from "react";
 
 const Predict = ({imageUrl}) => {
     const [result, setResult] = useState();
-    const requestOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({instances: [{"image": imageUrl}]})
-      };
 
     useEffect(() => {
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({instances: [{"image": imageUrl}]})
+          };
+        console.log(requestOptions);
         fetch('https://asia-northeast1-oyster-365512.cloudfunctions.net/test-resnet18-endpoint-api', requestOptions)
         .then((response) => response.json())
         .then((data) => {
@@ -20,7 +21,7 @@ const Predict = ({imageUrl}) => {
         .catch((error) => {
         console.error('Error:', error);
         });
-    },[])
+    },[imageUrl])
 
     return (
         <div>
