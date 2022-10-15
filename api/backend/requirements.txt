@@ -1,5 +1,0 @@
-flask
-flask-cors
-gunicorn
-numpy
-google-cloud-aiplatform
