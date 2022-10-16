@@ -8,7 +8,9 @@ import torch.nn.functional as F
 import numpy as np
 from PIL import Image
 import urllib
-from utils.pspnet import PSPNet
+import sys
+sys.path.append("../machine_learning")
+from semantic_segmentation.utils.pspnet import PSPNet
 
 app = Flask(__name__)
 CORS(app)
@@ -59,7 +61,7 @@ def predict():
     y = np.argmax(y, axis=0)
     mask_img = Image.fromarray(np.uint8(y), mode='P')
     mask_img = mask_img.resize((input_image.size), Image.NEAREST)
-    mask_img = np.array(anno_class_img)
+    mask_img = np.array(mask_img)
     # Read the categories
     np_input_image = np.array(input_image)
     
