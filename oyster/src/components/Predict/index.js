@@ -9,10 +9,10 @@ const Predict = ({imageUrl}) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({instances: [{"image": imageUrl}]})
+            body: JSON.stringify({"instances": [{"image": imageUrl}]})
           };
         console.log(requestOptions);
-        fetch('https://asia-northeast1-oyster-365512.cloudfunctions.net/test-resnet18-endpoint-api', requestOptions)
+        fetch('https://asia-northeast1-oyster-365512.cloudfunctions.net/madori-endpoint-api', requestOptions)
         .then((response) => response.json())
         .then((data) => {
         console.log('Success:', data);
@@ -25,7 +25,8 @@ const Predict = ({imageUrl}) => {
 
     return (
         <div>
-        <p>{result?.prediction}</p>
+        <p>{result?.prediction[0].area}</p>
+        <img src={result?.prediction[0].url} />
         </div>
     )
 };
