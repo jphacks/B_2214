@@ -30,8 +30,6 @@ const CaluculateSection = () => {
 
   return (
     <div>
-      <p>total pixels in the polygon is {pixelArea} pixels</p>
-
       <input
         type="number"
         value={inputArea}
