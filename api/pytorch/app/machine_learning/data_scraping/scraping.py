@@ -90,7 +90,7 @@ def main(args):
                                                         if not h_div11.find('img')['alt'] == '間取り図':
                                                             continue
                                                         img_url = h_div11.find('img')['data-src']
-                                                        path = f'../semantic_segmentation/dataset/data_tmp/{page}_{img_url.split("/")[-1]}'
+                                                        path = f'../semantic_segmentation/dataset/data/{page}_{img_url.split("/")[-1]}'
                                                         download_file(img_url, path)
 
 
