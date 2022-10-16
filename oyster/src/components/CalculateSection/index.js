@@ -10,6 +10,7 @@ const CaluculateSection = () => {
     setScale,
     selectedMetric,
     setSelectedMetric,
+    setShowResult,
   } = useTopPageState();
   const onClickCalc = () => {
     if (selectedMetric === 'm2') {
@@ -19,6 +20,7 @@ const CaluculateSection = () => {
       setScale((1.62 * inputArea) / pixelArea);
       console.log((1.62 * inputArea) / pixelArea);
     }
+    setShowResult(true);
   };
 
   const handleChange = (event) => {

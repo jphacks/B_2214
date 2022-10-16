@@ -3,10 +3,9 @@ import { useEffect, useState } from 'react';
 import Canvas from 'react-canvas-polygons';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
-import Predict from '../Predict';
 
 const DrawCanvasSection = (ref) => {
-  const { points, imageFile, imageSize, setPoint, setPixelArea, annotationRef } = useTopPageState();
+  const { points, imageFile, imageSize, setPoint, setPixelArea, annotationRef, setManual } = useTopPageState();
 
   const [tool, setTool] = useState('Line');
   const handleCleanCanva = (e) => {
@@ -48,11 +47,16 @@ const DrawCanvasSection = (ref) => {
     }
   };
 
+  const onClick = () => {
+    setManual(false);
+  };
+
   return (
     <div>
       {imageSize&&
         <div>
-            <button onClick={handleCleanCanva}>Clean Canvas</button>
+            <button onClick={onClick}>ai mode</button>
+            <button disabled>manual mode</button>
             <Canvas
             ref={(canvas) => (ref = canvas)}
             imgSrc={imageFile}
@@ -66,7 +70,7 @@ const DrawCanvasSection = (ref) => {
             }}
             initialData={points}
           />
-        <Predict imageUrl={imageFile}/>
+          <button onClick={handleCleanCanva}>Clean Canvas</button>
         </div>
       }
     </div>
