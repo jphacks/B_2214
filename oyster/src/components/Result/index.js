@@ -1,18 +1,18 @@
 import Canvas from '@kazuyahirotsu/react-canvas-polygons';
-import { setDoc } from "firebase/firestore";
 import { useEffect, useState } from 'react';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
 
-const DrawCanvasSection = (ref) => {
-  const { points, imageFile, imageSize, setPoint, setPixelArea, annotationRef, setManual } = useTopPageState();
+const Result = (ref) => {
+  const { imageFile, imageSize, scale } = useTopPageState();
+  const [tool, setTool] = useState('Polygon');
+  const [lineLength, setLineLength] = useState();
 
-  const [tool, setTool] = useState('Line');
   const handleCleanCanva = (e) => {
     e?.stopPropagation();
     ref.cleanCanvas();
-    setTool('Line');
-    const timeout = setTimeout(() => setTool('Polygon'), 50);
+    setTool('Polygon');
+    const timeout = setTimeout(() => setTool('Line'), 50);
     return () => clearTimeout(timeout);
   };
 
@@ -23,40 +23,23 @@ const DrawCanvasSection = (ref) => {
 
   // not sure what this is
   useEffect(() => {
-    const timeout = setTimeout(() => setTool('Polygon'), 50);
+    const timeout = setTimeout(() => setTool('Line'), 50);
     return () => clearTimeout(timeout);
   }, []);
 
   // get point data and calculate how many pixels are in the polygon
-  const area = require('area-polygon');
   const canvasClick = async (data) => {
-    setPoint(data);
-    console.log(points);
-    if (
-      points &&
-      Object.keys(points).length > 1 &&
-      points[String(Object.keys(points)[1])].length > 2
-    ) {
-      setPixelArea(area(points[String(Object.keys(points)[1])]));
-      console.log(area(points[String(Object.keys(points)[1])]));
-      const info = {
-        imageSrc: imageFile,
-        points: String(points[String(Object.keys(points)[1])])
-      }
-      await setDoc(annotationRef, info);
+    if(data.Line[0]){
+      console.log(data.Line[0]);
+      setLineLength(scale*Math.sqrt(Math.pow((data.Line[0][0][0]-data.Line[0][1][0]),2)+Math.pow((data.Line[0][0][1]-data.Line[0][1][1]),2)))
     }
-  };
 
-  const onClick = () => {
-    setManual(false);
   };
 
   return (
     <div>
       {imageSize&&
         <div>
-            <button onClick={onClick}>ai mode</button>
-            <button disabled>manual mode</button>
             <Canvas
             ref={(canvas) => (ref = canvas)}
             imgSrc={imageFile}
@@ -68,13 +51,13 @@ const DrawCanvasSection = (ref) => {
               // canvasClick(data);
               console.log('finish draw');
             }}
-            initialData={points}
           />
           <button onClick={handleCleanCanva}>Clean Canvas</button>
         </div>
       }
+      <p>{lineLength}m</p>
     </div>
   );
 };
 
-export default DrawCanvasSection;
+export default Result;
