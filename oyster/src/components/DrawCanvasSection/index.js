@@ -1,6 +1,6 @@
+import Canvas from '@kazuyahirotsu/react-canvas-polygons';
 import { setDoc } from "firebase/firestore";
 import { useEffect, useState } from 'react';
-import Canvas from 'react-canvas-polygons';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
 
