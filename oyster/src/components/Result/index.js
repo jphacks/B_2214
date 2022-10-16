@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { useTopPageState } from '../../hooks/useTopPageState';
 
 const Result = (ref) => {
-  const { imageFile, imageSize } = useTopPageState();
-  const [tool, setTool] = useState('Polygon')
+  const { imageFile, imageSize, scale } = useTopPageState();
+  const [tool, setTool] = useState('Polygon');
+  const [lineLength, setLineLength] = useState();
 
   const handleCleanCanva = (e) => {
     e?.stopPropagation();
@@ -28,7 +29,11 @@ const Result = (ref) => {
 
   // get point data and calculate how many pixels are in the polygon
   const canvasClick = async (data) => {
-    console.log(data)
+    if(data.Line[0]){
+      console.log(data.Line[0]);
+      setLineLength(scale*Math.sqrt(Math.pow((data.Line[0][0][0]-data.Line[0][1][0]),2)+Math.pow((data.Line[0][0][1]-data.Line[0][1][1]),2)))
+    }
+
   };
 
   return (
@@ -43,13 +48,14 @@ const Result = (ref) => {
             tool={tool}
             onDataUpdate={(data) => canvasClick(data)}
             onFinishDraw={(data) => {
-              canvasClick(data);
+              // canvasClick(data);
               console.log('finish draw');
             }}
           />
           <button onClick={handleCleanCanva}>Clean Canvas</button>
         </div>
       }
+      <p>{lineLength}m</p>
     </div>
   );
 };
