@@ -8,7 +8,7 @@ import { db, storage, STATE_CHANGED } from '../../utils/firebase';
 
 
 const DropImageSection = () => {
-  const { imageSize, setImageFile, setImageSize, setAnnotationRef } = useTopPageState();
+  const { imageSize, setImageFile, setImageSize, setAnnotationRef, setShowResult, setManual } = useTopPageState();
 
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
@@ -77,6 +77,8 @@ const DropImageSection = () => {
           console.log(img.width);
         };
         setAnnotationRef(doc(collection(db, "annotation")))
+        setManual(false);
+        setShowResult(false);
       });
   };
 

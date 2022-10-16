@@ -6,19 +6,21 @@ const CaluculateSection = () => {
     inputArea,
     setInputArea,
     options,
-    scale,
     setScale,
     selectedMetric,
     setSelectedMetric,
+    setShowResult,
+    points,
   } = useTopPageState();
   const onClickCalc = () => {
     if (selectedMetric === 'm2') {
-      setScale(inputArea / pixelArea);
+      setScale(Math.sqrt(inputArea / pixelArea));
       console.log(inputArea / pixelArea);
     } else {
-      setScale((1.62 * inputArea) / pixelArea);
+      setScale(Math.sqrt((1.62 * inputArea) / pixelArea));
       console.log((1.62 * inputArea) / pixelArea);
     }
+    setShowResult(true);
   };
 
   const handleChange = (event) => {
@@ -42,8 +44,12 @@ const CaluculateSection = () => {
           </option>
         ))}
       </select>
-      <button onClick={onClickCalc}>calc</button>
-      <p>scale: {scale} m^2/pixel</p>
+      {(points &&
+      Object.keys(points).length > 1 &&
+      points[String(Object.keys(points)[1])].length > 2 &&
+      inputArea)?
+      <button onClick={onClickCalc}>calc</button>:
+      <button disabled >calc</button>}
     </div>
   );
 };
