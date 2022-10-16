@@ -8,12 +8,15 @@ import torch.nn.functional as F
 import numpy as np
 from PIL import Image
 import urllib
+from utils.pspnet import PSPNet
 
 app = Flask(__name__)
 CORS(app)
 
 # Load model
-model = torch.hub.load('pytorch/vision:v0.10.0', 'resnet18', pretrained=True)
+model = PSPNet(n_classes=2)
+state_dict = torch.load("../machine_learning/semantic_segmentation/weights/pspnet50_2.pth", map_location={'cuda:0': 'cpu'})
+model.load_state_dict(state_dict)
 model.eval()
 print("Loaded model")
 
@@ -24,8 +27,7 @@ model = model.to(device)
 
 # Preprocessing and postprocessing
 preprocess = transforms.Compose([
-    transforms.Resize(256),
-    transforms.CenterCrop(224),
+    transforms.Resize((475, 475)),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ])
@@ -51,28 +53,23 @@ def predict():
     input_image = Image.open(filename)
     input_tensor = preprocess(input_image)
     input_batch = input_tensor.unsqueeze(0) # create a mini-batch as expected by the model
+    output = model(input_batch)
 
-    # move the input and model to GPU for speed if available
-    if torch.cuda.is_available():
-        input_batch = input_batch.to('cuda')
-        model.to('cuda')
-
-    with torch.no_grad():
-        output = model(input_batch)
-    probabilities = torch.nn.functional.softmax(output[0], dim=0)
-
+    y = output[0][0].detach().numpy()  # y：torch.Size([1, 21, 475, 475])
+    y = np.argmax(y, axis=0)
+    mask_img = Image.fromarray(np.uint8(y), mode='P')
+    mask_img = mask_img.resize((input_image.size), Image.NEAREST)
+    mask_img = np.array(anno_class_img)
     # Read the categories
-    with open("imagenet_classes.txt", "r") as f:
-        categories = [s.strip() for s in f.readlines()]
-    # Show top categories per image
-    top5_prob, top5_catid = torch.topk(probabilities, 5)
-    result = []
-    for i in range(top5_prob.size(0)):
-        result.append([categories[top5_catid[i]], top5_prob[i].item()])
-    print(result)
+    np_input_image = np.array(input_image)
+    
+    # 'np_input_image' is the masked img to be saved
+    np_input_image[mask_img==1] = [255, 0, 0]
+
+    area = np.sum(mask_img)
 
     return jsonify({
-        "predictions": result
+        "area": area
     })
 
 if __name__ == "__main__":
