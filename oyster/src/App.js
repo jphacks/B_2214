@@ -1,6 +1,6 @@
 import { MantineProvider } from '@mantine/core';
 
-import { lightTheme } from './styles/theme'
+import { lightTheme } from './styles/theme';
 
 function App({ children }) {
   return (

@@ -18,7 +18,7 @@ const Result = (ref) => {
 
   // need this after change of image
   useEffect(() => {
-    imageSize&&handleCleanCanva();
+    imageSize && handleCleanCanva();
   }, [imageSize]);
 
   // not sure what this is
@@ -29,18 +29,23 @@ const Result = (ref) => {
 
   // get point data and calculate how many pixels are in the polygon
   const canvasClick = async (data) => {
-    if(data.Line[0]){
+    if (data.Line[0]) {
       console.log(data.Line[0]);
-      setLineLength(scale*Math.sqrt(Math.pow((data.Line[0][0][0]-data.Line[0][1][0]),2)+Math.pow((data.Line[0][0][1]-data.Line[0][1][1]),2)))
+      setLineLength(
+        scale *
+          Math.sqrt(
+            Math.pow(data.Line[0][0][0] - data.Line[0][1][0], 2) +
+              Math.pow(data.Line[0][0][1] - data.Line[0][1][1], 2),
+          ),
+      );
     }
-
   };
 
   return (
     <div>
-      {imageSize&&
+      {imageSize && (
         <div>
-            <Canvas
+          <Canvas
             ref={(canvas) => (ref = canvas)}
             imgSrc={imageFile}
             height={imageSize.height}
@@ -54,7 +59,7 @@ const Result = (ref) => {
           />
           <button onClick={handleCleanCanva}>Clean Canvas</button>
         </div>
-      }
+      )}
       <p>{lineLength}m</p>
     </div>
   );

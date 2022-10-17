@@ -41,10 +41,11 @@ const CaluculateSection = () => {
           </option>
         ))}
       </select>
-      {(pixelArea &&
-      inputArea)?
-      <button onClick={onClickCalc}>calc</button>:
-      <button disabled >calc</button>}
+      {pixelArea && inputArea ? (
+        <button onClick={onClickCalc}>calc</button>
+      ) : (
+        <button disabled>calc</button>
+      )}
     </div>
   );
 };

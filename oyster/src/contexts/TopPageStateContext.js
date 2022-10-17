@@ -14,7 +14,7 @@ export const TopPageStateProvider = (props) => {
   const [annotationRef, setAnnotationRef] = useState();
   const [showResult, setShowResult] = useState(false);
   const [manual, setManual] = useState(false);
-  const [predictionRequestUrl, setPredictionRequestUrl] = useState("");
+  const [predictionRequestUrl, setPredictionRequestUrl] = useState('');
   const [prediction, setPrediction] = useState();
 
   // metrics selection
@@ -23,8 +23,6 @@ export const TopPageStateProvider = (props) => {
     { value: 'jyo', text: '帖' },
   ];
   const [selectedMetric, setSelectedMetric] = useState(options[0].value);
-
-
 
   return (
     <topPageStateContext.Provider
