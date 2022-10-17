@@ -1,6 +1,7 @@
-import { createStyles, Button, Container } from '@mantine/core';
+import Canvas from '@kazuyahirotsu/react-canvas-polygons';
+import { createStyles, Button, Container, Grid } from '@mantine/core';
+import { setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import Canvas from 'react-canvas-polygons';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
 
@@ -33,9 +34,15 @@ const useStyles = createStyles((theme) => ({
 
 const DrawCanvasSection = (ref) => {
   const { classes } = useStyles();
-
-  const { points, imageFile, imageSize, setPoint, setPixelArea } =
-    useTopPageState();
+  const {
+    points,
+    imageFile,
+    imageSize,
+    setPoint,
+    setPixelArea,
+    annotationRef,
+    setManual,
+  } = useTopPageState();
 
   const [tool, setTool] = useState('Line');
   const handleCleanCanva = (e) => {
@@ -59,7 +66,7 @@ const DrawCanvasSection = (ref) => {
 
   // get point data and calculate how many pixels are in the polygon
   const area = require('area-polygon');
-  const canvasClick = (data) => {
+  const canvasClick = async (data) => {
     setPoint(data);
     console.log(points);
     if (
@@ -69,39 +76,50 @@ const DrawCanvasSection = (ref) => {
     ) {
       setPixelArea(area(points[String(Object.keys(points)[1])]));
       console.log(area(points[String(Object.keys(points)[1])]));
+      const info = {
+        imageSrc: imageFile,
+        points: String(points[String(Object.keys(points)[1])]),
+      };
+      await setDoc(annotationRef, info);
     }
   };
 
+  const onClick = () => {
+    setManual(false);
+  };
+
   return (
-    <>
-      {imageSize ? (
-        <div className={classes.root}>
-          <Container className={classes.container}>
-            <Canvas
-              ref={(canvas) => (ref = canvas)}
-              imgSrc={imageFile}
-              height={imageSize.height}
-              width={imageSize.width}
-              tool={tool}
-              onDataUpdate={(data) => canvasClick(data)}
-              onFinishDraw={(data) => {
-                canvasClick(data);
-                console.log('finish draw');
-              }}
-              initialData={points}
-            />
-            <Button
-              size="xl"
-              color="orange"
-              radius="lg"
-              onClick={handleCleanCanva}
-            >
-              Clean Canvas
-            </Button>
-          </Container>
-        </div>
-      ) : null}
-    </>
+    <div className={classes.root}>
+      {imageSize && (
+        <Container className={classes.comtainer}>
+          <Grid>
+            <Button onClick={onClick}>ai mode</Button>
+            <Button disabled>manual mode</Button>
+          </Grid>
+          <Canvas
+            ref={(canvas) => (ref = canvas)}
+            imgSrc={imageFile}
+            height={imageSize.height}
+            width={imageSize.width}
+            tool={tool}
+            onDataUpdate={(data) => canvasClick(data)}
+            onFinishDraw={(data) => {
+              // canvasClick(data);
+              console.log('finish draw');
+            }}
+            initialData={points}
+          />
+          <Button
+            size="xl"
+            color="orange"
+            radius="lg"
+            onClick={handleCleanCanva}
+          >
+            Clean Canvas
+          </Button>
+        </Container>
+      )}
+    </div>
   );
 };
 

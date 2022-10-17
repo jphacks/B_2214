@@ -9,16 +9,17 @@ const CaluculateSection = () => {
     setScale,
     selectedMetric,
     setSelectedMetric,
+    setShowResult,
   } = useTopPageState();
-
   const onClickCalc = () => {
     if (selectedMetric === 'm2') {
-      setScale(inputArea / pixelArea);
+      setScale(Math.sqrt(inputArea / pixelArea));
       console.log(inputArea / pixelArea);
     } else {
-      setScale((1.62 * inputArea) / pixelArea);
+      setScale(Math.sqrt((1.62 * inputArea) / pixelArea));
       console.log((1.62 * inputArea) / pixelArea);
     }
+    setShowResult(true);
   };
 
   const handleChange = (event) => {
@@ -28,8 +29,6 @@ const CaluculateSection = () => {
 
   return (
     <div>
-      <p>total pixels in the polygon is {pixelArea} pixels</p>
-
       <input
         type="number"
         value={inputArea}
@@ -42,7 +41,10 @@ const CaluculateSection = () => {
           </option>
         ))}
       </select>
-      <button onClick={onClickCalc}>calc</button>
+      {(pixelArea &&
+      inputArea)?
+      <button onClick={onClickCalc}>calc</button>:
+      <button disabled >calc</button>}
     </div>
   );
 };

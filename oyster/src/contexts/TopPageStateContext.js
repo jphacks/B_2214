@@ -11,7 +11,11 @@ export const TopPageStateProvider = (props) => {
   const [scale, setScale] = useState(0);
   const [imageFile, setImageFile] = useState();
   const [imageSize, setImageSize] = useState();
-
+  const [annotationRef, setAnnotationRef] = useState();
+  const [showResult, setShowResult] = useState(false);
+  const [manual, setManual] = useState(false);
+  const [predictionRequestUrl, setPredictionRequestUrl] = useState("");
+  const [prediction, setPrediction] = useState();
 
   // metrics selection
   const options = [
@@ -40,6 +44,16 @@ export const TopPageStateProvider = (props) => {
         setImageSize,
         selectedMetric,
         setSelectedMetric,
+        annotationRef,
+        setAnnotationRef,
+        showResult,
+        setShowResult,
+        manual,
+        setManual,
+        predictionRequestUrl,
+        setPredictionRequestUrl,
+        prediction,
+        setPrediction,
         // objects
         options,
       }}
