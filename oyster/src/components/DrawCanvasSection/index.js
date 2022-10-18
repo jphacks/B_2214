@@ -1,11 +1,57 @@
 import Canvas from '@kazuyahirotsu/react-canvas-polygons';
-import { setDoc } from "firebase/firestore";
+import {
+  createStyles,
+  Button,
+  Container,
+  SegmentedControl,
+} from '@mantine/core';
+import { IconEraser } from '@tabler/icons';
+import { setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
 
+const useStyles = createStyles((theme) => ({
+  root: {
+    width: '100%',
+    maxWidth: theme.breakpoints.xl,
+    margin: '0',
+    padding: `${theme.spacing.xl}px ${theme.spacing.xl}px ${theme.spacing.md}px`,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.gray[0],
+    [theme.fn.smallerThan('md')]: {
+      padding: `${theme.spacing.md}px ${theme.spacing.sm}px ${theme.spacing.md}px`,
+    },
+  },
+  container: {
+    backgroundColor: theme.colors.blue[0],
+    padding: theme.spacing.lg,
+    gap: theme.spacing.md,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: theme.radius.md,
+  },
+}));
+
 const DrawCanvasSection = (ref) => {
-  const { points, imageFile, imageSize, setPoint, setPixelArea, annotationRef, setManual } = useTopPageState();
+  const { classes } = useStyles();
+  const {
+    points,
+    imageFile,
+    imageSize,
+    setPoint,
+    setPixelArea,
+    annotationRef,
+    manual,
+    setManual,
+    controlPanelValue,
+    setControlPanelValue,
+  } = useTopPageState();
 
   const [tool, setTool] = useState('Line');
   const handleCleanCanva = (e) => {
@@ -18,7 +64,7 @@ const DrawCanvasSection = (ref) => {
 
   // need this after change of image
   useEffect(() => {
-    imageSize&&handleCleanCanva();
+    imageSize && handleCleanCanva();
   }, [imageSize]);
 
   // not sure what this is
@@ -41,23 +87,33 @@ const DrawCanvasSection = (ref) => {
       console.log(area(points[String(Object.keys(points)[1])]));
       const info = {
         imageSrc: imageFile,
-        points: String(points[String(Object.keys(points)[1])])
-      }
+        points: String(points[String(Object.keys(points)[1])]),
+      };
       await setDoc(annotationRef, info);
     }
   };
 
-  const onClick = () => {
-    setManual(false);
-  };
+  useEffect(() => {
+    if (controlPanelValue === 'manual') setManual(true);
+    else setManual(false);
+    console.log(controlPanelValue, manual);
+  }, [controlPanelValue]);
 
   return (
-    <div>
-      {imageSize&&
-        <div>
-            <button onClick={onClick}>ai mode</button>
-            <button disabled>manual mode</button>
-            <Canvas
+    <div className={classes.root}>
+      {imageSize && (
+        <Container className={classes.container}>
+          <SegmentedControl
+            color="blue"
+            value={controlPanelValue}
+            onChange={setControlPanelValue}
+            data={[
+              { label: 'AI mode', value: 'ai' },
+              { label: 'Manual mode', value: 'manual' },
+            ]}
+          />
+
+          <Canvas
             ref={(canvas) => (ref = canvas)}
             imgSrc={imageFile}
             height={imageSize.height}
@@ -70,9 +126,17 @@ const DrawCanvasSection = (ref) => {
             }}
             initialData={points}
           />
-          <button onClick={handleCleanCanva}>Clean Canvas</button>
-        </div>
-      }
+          <Button
+            size="xl"
+            color="blue"
+            radius="lg"
+            onClick={handleCleanCanva}
+            rightIcon={<IconEraser />}
+          >
+            Clean Canvas
+          </Button>
+        </Container>
+      )}
     </div>
   );
 };

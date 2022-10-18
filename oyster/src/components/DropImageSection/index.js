@@ -1,4 +1,6 @@
-import { collection, doc } from "firebase/firestore";
+import { createStyles, Button, Container, Text, Progress } from '@mantine/core';
+import { IconRefresh } from '@tabler/icons';
+import { collection, doc } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -6,9 +8,72 @@ import { useDropzone } from 'react-dropzone';
 import { useTopPageState } from '../../hooks/useTopPageState';
 import { db, storage, STATE_CHANGED } from '../../utils/firebase';
 
+const useStyles = createStyles((theme) => ({
+  root: {
+    width: '100%',
+    maxWidth: theme.breakpoints.xl,
+    margin: '0',
+    padding: `${theme.spacing.xl}px`,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.gray[0],
+    [theme.fn.smallerThan('md')]: {
+      padding: `${theme.spacing.md}px ${theme.spacing.sm}px  ${theme.spacing.sm}px`,
+    },
+  },
+  buttonContainer: {
+    margin: '0',
+    padding: `${theme.spacing.xl * 2}px ${theme.spacing.xl}px ${
+      theme.spacing.sm
+    }px`,
+    backgroundColor: theme.colors.gray[0],
+    [theme.fn.smallerThan('md')]: {
+      padding: `${theme.spacing.md}px ${theme.spacing.sm}px  ${theme.spacing.sm}px`,
+    },
+  },
+  button: {
+    gap: theme.spacing.md,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'left',
+  },
+  container: {
+    height: '50vh',
+    width: '50vw',
+    backgroundColor: theme.colors.blue[0],
+    padding: theme.spacing.lg,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    textAlign: 'center',
+    borderRadius: theme.radius.md,
+    color: theme.colors.blue[6],
+    fontWeight: '700',
+    fontSize: theme.fontSizes.xl,
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: theme.colors.blue[1],
+    },
+    [theme.fn.smallerThan('md')]: {
+      padding: theme.spacing.sm,
+      width: '80vw',
+    },
+  },
+}));
 
 const DropImageSection = () => {
-  const { imageSize, setImageFile, setImageSize, setAnnotationRef, setShowResult, setManual } = useTopPageState();
+  const { classes } = useStyles();
+
+  const {
+    imageSize,
+    setImageFile,
+    setImageSize,
+    setAnnotationRef,
+    setShowResult,
+    setControlPanelValue,
+  } = useTopPageState();
 
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
@@ -16,7 +81,7 @@ const DropImageSection = () => {
     });
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, isDragActive } = useDropzone({
     accept: {
       'image/jpeg': [],
       // 'image/png': [],
@@ -25,15 +90,16 @@ const DropImageSection = () => {
   });
 
   // random string generator
-  const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   function generateString(length) {
-      let result = ' ';
-      const charactersLength = characters.length;
-      for ( let i = 0; i < length; i++ ) {
-          result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      }
+    let result = ' ';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
 
-      return result;
+    return result;
   }
 
   // Uploads images to Firebase Storage
@@ -51,11 +117,14 @@ const DropImageSection = () => {
     setUploading(true);
 
     // Starts the upload
-    const task = uploadBytesResumable(fileRef, file)
+    const task = uploadBytesResumable(fileRef, file);
 
     // Listen to updates to upload task
     task.on(STATE_CHANGED, (snapshot) => {
-      const pct = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(0);
+      const pct = (
+        (snapshot.bytesTransferred / snapshot.totalBytes) *
+        100
+      ).toFixed(0);
       setProgress(pct);
     });
 
@@ -76,30 +145,41 @@ const DropImageSection = () => {
           console.log(img.height);
           console.log(img.width);
         };
-        setAnnotationRef(doc(collection(db, "annotation")))
-        setManual(false);
+        setAnnotationRef(doc(collection(db, 'annotation')));
+        setControlPanelValue('ai');
         setShowResult(false);
       });
   };
 
   return (
-    <div>
-      {imageSize ? (
-        <div {...getRootProps()}>
-          <input {...getInputProps()} />
-          <button>click to change image</button>
-        </div>
-      ) : (
-        <div {...getRootProps()}>
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <p>Drop the image here ...</p>
-          ) : (
-            <p>Drag and drop the image here, or click to select the image</p>
-          )}
-        </div>
-      )}
-      {uploading && <p>{progress}% uploading...</p>}
+    <div className={imageSize ? classes.buttonContainer : classes.root}>
+      <div {...getRootProps()}>
+        {imageSize ? (
+          <div className={classes.button}>
+            <Button
+              size="xl"
+              color="blue"
+              radius="lg"
+              rightIcon={<IconRefresh />}
+            >
+              Change Image
+            </Button>
+          </div>
+        ) : (
+          <Container className={classes.container}>
+            {uploading ? (
+              <Progress value={progress} color="blue" />
+            ) : isDragActive ? (
+              <Text>Drop the image here ...</Text>
+            ) : (
+              <Text>
+                Drag and drop the image here <br /> or <br /> click to select
+                the image{' '}
+              </Text>
+            )}
+          </Container>
+        )}
+      </div>
     </div>
   );
 };
