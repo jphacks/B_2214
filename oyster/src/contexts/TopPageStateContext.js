@@ -14,9 +14,11 @@ export const TopPageStateProvider = (props) => {
   const [annotationRef, setAnnotationRef] = useState();
   const [showResult, setShowResult] = useState(false);
   const [manual, setManual] = useState(false);
+  const [controlPanelValue, setControlPanelValue] = useState('ai');
   const [predictionRequestUrl, setPredictionRequestUrl] = useState('');
   const [prediction, setPrediction] = useState();
-
+  const [tool, setTool] = useState('Line');
+  const [lineLength, setLineLength] = useState();
   // metrics selection
   const options = [
     { value: 'm2', text: 'm^2' },
@@ -48,10 +50,16 @@ export const TopPageStateProvider = (props) => {
         setShowResult,
         manual,
         setManual,
+        controlPanelValue,
+        setControlPanelValue,
         predictionRequestUrl,
         setPredictionRequestUrl,
         prediction,
         setPrediction,
+        tool,
+        setTool,
+        lineLength,
+        setLineLength,
         // objects
         options,
       }}

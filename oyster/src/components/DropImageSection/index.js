@@ -1,4 +1,5 @@
-import { createStyles, Button, Container, Text } from '@mantine/core';
+import { createStyles, Button, Container, Text, Progress } from '@mantine/core';
+import { IconRefresh } from '@tabler/icons';
 import { collection, doc } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useCallback, useState } from 'react';
@@ -12,11 +13,21 @@ const useStyles = createStyles((theme) => ({
     width: '100%',
     maxWidth: theme.breakpoints.xl,
     margin: '0',
-    padding: `${theme.spacing.xl}px ${theme.spacing.xl}px ${theme.spacing.sm}px`,
+    padding: `${theme.spacing.xl}px`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: theme.colors.gray[0],
+    [theme.fn.smallerThan('md')]: {
+      padding: `${theme.spacing.md}px ${theme.spacing.sm}px  ${theme.spacing.sm}px`,
+    },
+  },
+  buttonContainer: {
+    margin: '0',
+    padding: `${theme.spacing.xl * 2}px ${theme.spacing.xl}px ${
+      theme.spacing.sm
+    }px`,
     backgroundColor: theme.colors.gray[0],
     [theme.fn.smallerThan('md')]: {
       padding: `${theme.spacing.md}px ${theme.spacing.sm}px  ${theme.spacing.sm}px`,
@@ -29,7 +40,7 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'left',
   },
   container: {
-    height: '30vh',
+    height: '50vh',
     width: '50vw',
     backgroundColor: theme.colors.blue[0],
     padding: theme.spacing.lg,
@@ -141,17 +152,24 @@ const DropImageSection = () => {
   };
 
   return (
-    <div className={classes.root}>
+    <div className={imageSize ? classes.buttonContainer : classes.root}>
       <div {...getRootProps()}>
         {imageSize ? (
           <div className={classes.button}>
-            <Button size="xl" color="blue" radius="lg">
+            <Button
+              size="xl"
+              color="blue"
+              radius="lg"
+              rightIcon={<IconRefresh />}
+            >
               Change Image
             </Button>
           </div>
         ) : (
           <Container className={classes.container}>
-            {isDragActive ? (
+            {uploading ? (
+              <Progress value={progress} color="blue" />
+            ) : isDragActive ? (
               <Text>Drop the image here ...</Text>
             ) : (
               <Text>
@@ -162,7 +180,6 @@ const DropImageSection = () => {
           </Container>
         )}
       </div>
-      {uploading && <p>{progress}% uploading...</p>}
     </div>
   );
 };

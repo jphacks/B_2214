@@ -1,5 +1,11 @@
 import Canvas from '@kazuyahirotsu/react-canvas-polygons';
-import { createStyles, Button, Container, Grid } from '@mantine/core';
+import {
+  createStyles,
+  Button,
+  Container,
+  SegmentedControl,
+} from '@mantine/core';
+import { IconEraser } from '@tabler/icons';
 import { setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
@@ -41,7 +47,10 @@ const DrawCanvasSection = (ref) => {
     setPoint,
     setPixelArea,
     annotationRef,
+    manual,
     setManual,
+    controlPanelValue,
+    setControlPanelValue,
   } = useTopPageState();
 
   const [tool, setTool] = useState('Line');
@@ -84,18 +93,26 @@ const DrawCanvasSection = (ref) => {
     }
   };
 
-  const onClick = () => {
-    setManual(false);
-  };
+  useEffect(() => {
+    if (controlPanelValue === 'manual') setManual(true);
+    else setManual(false);
+    console.log(controlPanelValue, manual);
+  }, [controlPanelValue]);
 
   return (
     <div className={classes.root}>
       {imageSize && (
-        <Container className={classes.comtainer}>
-          <Grid>
-            <Button onClick={onClick}>ai mode</Button>
-            <Button disabled>manual mode</Button>
-          </Grid>
+        <Container className={classes.container}>
+          <SegmentedControl
+            color="blue"
+            value={controlPanelValue}
+            onChange={setControlPanelValue}
+            data={[
+              { label: 'AI mode', value: 'ai' },
+              { label: 'Manual mode', value: 'manual' },
+            ]}
+          />
+
           <Canvas
             ref={(canvas) => (ref = canvas)}
             imgSrc={imageFile}
@@ -111,9 +128,10 @@ const DrawCanvasSection = (ref) => {
           />
           <Button
             size="xl"
-            color="orange"
+            color="blue"
             radius="lg"
             onClick={handleCleanCanva}
+            rightIcon={<IconEraser />}
           >
             Clean Canvas
           </Button>
