@@ -72,7 +72,7 @@ const DropImageSection = () => {
     setImageSize,
     setAnnotationRef,
     setShowResult,
-    setManual,
+    setControlPanelValue,
   } = useTopPageState();
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -146,7 +146,7 @@ const DropImageSection = () => {
           console.log(img.width);
         };
         setAnnotationRef(doc(collection(db, 'annotation')));
-        setManual(false);
+        setControlPanelValue('ai');
         setShowResult(false);
       });
   };
