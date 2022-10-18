@@ -7,17 +7,15 @@ import { useTopPageState } from '../../hooks/useTopPageState';
 
 const useStyles = createStyles((theme) => ({
   root: {
-    width: '100%',
-    maxWidth: theme.breakpoints.xl,
     margin: '0',
-    padding: `${theme.spacing.xl}px`,
+    padding: `${theme.spacing.xl}px ${theme.spacing.xl}px ${theme.spacing.md}px`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: theme.colors.gray[0],
     [theme.fn.smallerThan('md')]: {
-      padding: `${theme.spacing.md}px ${theme.spacing.sm}px  ${theme.spacing.sm}px`,
+      padding: `${theme.spacing.md}px ${theme.spacing.sm}px ${theme.spacing.md}px`,
     },
   },
   button: {
@@ -79,7 +77,7 @@ const Result = (ref) => {
   };
 
   return (
-    <>
+    <div className={classes.root}>
       {imageSize && (
         <Container className={classes.container}>
           <Canvas
@@ -106,7 +104,7 @@ const Result = (ref) => {
           {lineLength ? <Title>{lineLength}m</Title> : <Title> </Title>}
         </Container>
       )}
-    </>
+    </div>
   );
 };
 

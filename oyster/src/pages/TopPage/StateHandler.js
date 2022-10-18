@@ -33,7 +33,7 @@ const StateHandler = () => {
   const { classes } = useStyles();
   const theme = useMantineTheme();
   const isMediumSize = useMediumSize(theme);
-  const { imageSize, manual, imageFile, showResult } = useTopPageState();
+  const { imageSize, manual, showResult } = useTopPageState();
   return (
     <>
       {isMediumSize ? (
@@ -45,7 +45,7 @@ const StateHandler = () => {
               ) : manual ? (
                 <DrawCanvasSection />
               ) : (
-                <Predict imageUrl={imageFile} />
+                <Predict />
               )}
 
               <Container className={classes.container}>
@@ -67,7 +67,7 @@ const StateHandler = () => {
                 ) : manual ? (
                   <DrawCanvasSection />
                 ) : (
-                  <Predict imageUrl={imageFile} />
+                  <Predict />
                 )}
               </Grid.Col>
               <Grid.Col span={4} className={classes.gridCol}>

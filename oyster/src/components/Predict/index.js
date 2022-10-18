@@ -38,9 +38,10 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const Predict = ({ imageUrl }) => {
+const Predict = () => {
   const { classes } = useStyles();
   const {
+    imageFile: imageUrl,
     manual,
     setManual,
     controlPanelValue,
