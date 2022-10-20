@@ -1,8 +1,9 @@
-import { Grid, createStyles, Container, useMantineTheme } from '@mantine/core';
+import { Grid, createStyles, Container, useMantineTheme, Header, AppShell } from '@mantine/core';
 
 import CalculateSection from '../../components/CalculateSection';
 import DrawCanvasSection from '../../components/DrawCanvasSection';
 import DropImageSection from '../../components/DropImageSection';
+import { Logo } from '../../components/Logo/logo';
 import Predict from '../../components/Predict';
 import Result from '../../components/Result';
 import { useTopPageState } from '../../hooks/useTopPageState';
@@ -36,6 +37,15 @@ const StateHandler = () => {
   const { imageSize, manual, showResult } = useTopPageState();
   return (
     <>
+      <AppShell
+        padding="md"
+        header={<Header height={60} p="xs">
+          <Logo></Logo>
+        </Header>}
+        styles={(theme) => ({
+          main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
+        })}
+      >
       {isMediumSize ? (
         <>
           {imageSize ? (
@@ -82,6 +92,7 @@ const StateHandler = () => {
           )}
         </>
       )}
+      </AppShell>
     </>
   );
 };
