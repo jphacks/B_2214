@@ -198,9 +198,8 @@ def train_model(net, dataloaders_dict, criterion, scheduler, optimizer, num_epoc
                         count -= 1
 
                         if (iteration % 10 == 0):
-                            duration = t_iter_finish - t_iter_start
-                            print('イテレーション {} || Loss: {:.4f} || 10iter: {:.4f} sec.'.format(
-                                iteration, loss.item()/batch_size*batch_multiplier, duration))
+                            print('イテレーション {} || Loss: {:.4f}'.format(
+                                iteration, loss.item()/batch_size*batch_multiplier))
 
                         epoch_train_loss += loss.item() * batch_multiplier
                         iteration += 1
