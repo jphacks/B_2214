@@ -13,6 +13,8 @@ def main():
         annotation = json.load(f)
 
     for anno in annotation:
+        if anno['Skipped'] == True:
+            continue
         img = np.asarray(Image.open(data_dir / anno['External ID']))
         black_img = np.full_like(img, 0)
         anno_list = []
