@@ -121,7 +121,7 @@ const DrawCanvasSection = (ref) => {
             tool={tool}
             onDataUpdate={(data) => canvasClick(data)}
             onFinishDraw={(data) => {
-              // canvasClick(data);
+              canvasClick(data);
               console.log('finish draw');
             }}
             initialData={points}
