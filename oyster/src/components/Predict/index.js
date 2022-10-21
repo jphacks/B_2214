@@ -5,6 +5,7 @@ import {
   Loader,
   Text,
   Button,
+  Stepper,
   useMantineTheme,
 } from '@mantine/core';
 import { IconEraser } from '@tabler/icons';
@@ -27,6 +28,14 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan('md')]: {
       padding: `${theme.spacing.md}px ${theme.spacing.sm}px ${theme.spacing.md}px`,
     },
+    stepContainer: {
+      margin: '0',
+      padding: `${theme.spacing.md}px`,
+    },
+  },
+  stepContainer: {
+    margin: '0',
+    padding: `${theme.spacing.md}px`,
   },
   container: {
     backgroundColor: theme.colors.blue[0],
@@ -45,6 +54,8 @@ const useStyles = createStyles((theme) => ({
 
 const Predict = () => {
   const { classes } = useStyles();
+  const theme = useMantineTheme();
+  const isMediumSize = useMediumSize(theme);
   const {
     predictionImageFile: imageUrl,
     setManual,
@@ -111,6 +122,22 @@ const Predict = () => {
 
   return (
     <div className={classes.root}>
+      <div className={classes.stepContainer}>
+        <Stepper
+          orientation={isMediumSize ? 'vertical' : 'horizontal'}
+          size="md"
+          // size={isMediumSize ? 'xs' : 'md'}
+          active={1}
+          color="blue"
+        >
+          <Stepper.Step label="Step 1" description="Upload Image" />
+          <Stepper.Step
+            label="Step 2"
+            description="Surround Image and Input Area"
+          />
+          <Stepper.Step label="Step 3" description="Click Two Points" />
+        </Stepper>
+      </div>
       <Container className={classes.container}>
         <SegmentedControl
           color="blue"

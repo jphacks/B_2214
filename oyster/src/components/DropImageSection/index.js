@@ -1,4 +1,14 @@
-import { createStyles, Button, Container, Text, Progress, useMantineTheme } from '@mantine/core';
+import {
+  createStyles,
+  Button,
+  Container,
+  Text,
+  Progress,
+  Grid,
+  Image as ReactImage,
+  Stepper,
+  useMantineTheme,
+} from '@mantine/core';
 import { IconRefresh } from '@tabler/icons';
 import { collection, doc } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -8,6 +18,8 @@ import Resizer from "react-image-file-resizer";
 
 import { useTopPageState } from '../../hooks/useTopPageState';
 import { useMediumSize } from '../../styles/breakpoints';
+import sampleImage1 from '../../utils/SampleImage/sample1.jpeg';
+import sampleImage2 from '../../utils/SampleImage/sample2.jpeg';
 import { db, storage, STATE_CHANGED } from '../../utils/firebase';
 
 const useStyles = createStyles((theme) => ({
@@ -22,8 +34,12 @@ const useStyles = createStyles((theme) => ({
     alignItems: 'center',
     backgroundColor: theme.colors.gray[0],
     [theme.fn.smallerThan('md')]: {
-      padding: `${theme.spacing.md}px ${theme.spacing.sm}px  ${theme.spacing.sm}px`,
+      padding: `${theme.spacing.xs}px ${theme.spacing.sm}px  ${theme.spacing.sm}px`,
     },
+  },
+  stepContainer: {
+    margin: '0',
+    padding: `${theme.spacing.md}px`,
   },
   buttonContainer: {
     margin: '0',
@@ -61,6 +77,17 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan('md')]: {
       padding: theme.spacing.sm,
       width: '80vw',
+    },
+  },
+  imageContainer: {
+    backgroundColor: theme.colors.gray[0],
+    padding: theme.spacing.lg,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    [theme.fn.smallerThan('md')]: {
+      padding: `0px`,
     },
   },
 }));
@@ -286,6 +313,24 @@ const DropImageSection = () => {
 
   return (
     <div className={imageSize ? classes.buttonContainer : classes.root}>
+      {!imageSize && (
+        <div className={classes.stepContainer}>
+          <Stepper
+            orientation={isMediumSize ? 'vertical' : 'horizontal'}
+            size="md"
+            // size={isMediumSize ? 'xs' : 'md'}
+            active={0}
+            color="blue"
+          >
+            <Stepper.Step label="Step 1" description="Upload Image" />
+            <Stepper.Step
+              label="Step 2"
+              description="Surround Image and Input Area"
+            />
+            <Stepper.Step label="Step 3" description="Click Two Points" />
+          </Stepper>
+        </div>
+      )}
       <div {...getRootProps()}>
         {imageSize ? (
           <div className={classes.button}>
@@ -313,6 +358,16 @@ const DropImageSection = () => {
           </Container>
         )}
       </div>
+      {!imageSize && (
+        <Grid className={classes.imageContainer}>
+          <Grid.Col span={isMediumSize ? 6 : 4}>
+            <ReactImage src={sampleImage1} />
+          </Grid.Col>
+          <Grid.Col span={isMediumSize ? 6 : 4}>
+            <ReactImage src={sampleImage2} />
+          </Grid.Col>
+        </Grid>
+      )}
     </div>
   );
 };

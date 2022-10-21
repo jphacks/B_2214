@@ -4,12 +4,15 @@ import {
   Button,
   Container,
   SegmentedControl,
+  Stepper,
+  useMantineTheme,
 } from '@mantine/core';
 import { IconEraser } from '@tabler/icons';
 import { setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
+import { useMediumSize } from '../../styles/breakpoints';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -25,6 +28,10 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan('md')]: {
       padding: `${theme.spacing.md}px ${theme.spacing.sm}px ${theme.spacing.md}px`,
     },
+  },
+  stepContainer: {
+    margin: '0',
+    padding: `${theme.spacing.md}px`,
   },
   container: {
     backgroundColor: theme.colors.blue[0],
@@ -43,6 +50,8 @@ const useStyles = createStyles((theme) => ({
 
 const DrawCanvasSection = (ref) => {
   const { classes } = useStyles();
+  const theme = useMantineTheme();
+  const isMediumSize = useMediumSize(theme);
   const {
     points,
     imageFile,
@@ -100,6 +109,22 @@ const DrawCanvasSection = (ref) => {
 
   return (
     <div className={classes.root}>
+      <div className={classes.stepContainer}>
+        <Stepper
+          orientation={isMediumSize ? 'vertical' : 'horizontal'}
+          size="md"
+          // size={isMediumSize ? 'xs' : 'md'}
+          active={1}
+          color="blue"
+        >
+          <Stepper.Step label="Step 1" description="Upload Image" />
+          <Stepper.Step
+            label="Step 2"
+            description="Surround Image and Input Area"
+          />
+          <Stepper.Step label="Step 3" description="Click Two Points" />
+        </Stepper>
+      </div>
       {imageSize && (
         <Container className={classes.container}>
           <SegmentedControl
