@@ -1,20 +1,12 @@
 import Canvas from '@kazuyahirotsu/react-canvas-polygons';
-import {
-  createStyles,
-  Button,
-  Container,
-  SegmentedControl,
-} from '@mantine/core';
+import { Button, createStyles, Container, Title } from '@mantine/core';
 import { IconEraser } from '@tabler/icons';
-import { setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
 
 const useStyles = createStyles((theme) => ({
   root: {
-    width: '100%',
-    maxWidth: theme.breakpoints.xl,
     margin: '0',
     padding: `${theme.spacing.xl}px ${theme.spacing.xl}px ${theme.spacing.md}px`,
     display: 'flex',
@@ -25,6 +17,12 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan('md')]: {
       padding: `${theme.spacing.md}px ${theme.spacing.sm}px ${theme.spacing.md}px`,
     },
+  },
+  button: {
+    gap: theme.spacing.md,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'left',
   },
   container: {
     backgroundColor: theme.colors.blue[0],
@@ -38,27 +36,17 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const DrawCanvasSection = (ref) => {
+const Result = (ref) => {
   const { classes } = useStyles();
-  const {
-    points,
-    imageFile,
-    imageSize,
-    setPoint,
-    setPixelArea,
-    annotationRef,
-    manual,
-    setManual,
-    controlPanelValue,
-    setControlPanelValue,
-  } = useTopPageState();
+  const { imageFile, imageSize, scale } = useTopPageState();
+  const [tool, setTool] = useState('Polygon');
+  const [lineLength, setLineLength] = useState();
 
-  const [tool, setTool] = useState('Line');
   const handleCleanCanva = (e) => {
     e?.stopPropagation();
     ref.cleanCanvas();
-    setTool('Line');
-    const timeout = setTimeout(() => setTool('Polygon'), 50);
+    setTool('Polygon');
+    const timeout = setTimeout(() => setTool('Line'), 50);
     return () => clearTimeout(timeout);
   };
 
@@ -69,50 +57,29 @@ const DrawCanvasSection = (ref) => {
 
   // not sure what this is
   useEffect(() => {
-    const timeout = setTimeout(() => setTool('Polygon'), 50);
+    const timeout = setTimeout(() => setTool('Line'), 50);
     return () => clearTimeout(timeout);
   }, []);
 
   // get point data and calculate how many pixels are in the polygon
-  const area = require('area-polygon');
   const canvasClick = async (data) => {
-    setPoint(data);
-    console.log(points);
-    if (
-      points &&
-      Object.keys(points).length > 1 &&
-      points[String(Object.keys(points)[1])].length > 2
-    ) {
-      setPixelArea(area(points[String(Object.keys(points)[1])]));
-      console.log(area(points[String(Object.keys(points)[1])]));
-      const info = {
-        imageSrc: imageFile,
-        points: String(points[String(Object.keys(points)[1])]),
-      };
-      await setDoc(annotationRef, info);
+    if (data.Line[0]) {
+      console.log(data.Line[0]);
+      const tmp =
+        scale *
+        Math.sqrt(
+          Math.pow(data.Line[0][0][0] - data.Line[0][1][0], 2) +
+            Math.pow(data.Line[0][0][1] - data.Line[0][1][1], 2),
+        );
+      console.log(tmp);
+      setLineLength(Number.parseFloat(tmp).toFixed(2));
     }
   };
-
-  useEffect(() => {
-    if (controlPanelValue === 'manual') setManual(true);
-    else setManual(false);
-    console.log(controlPanelValue, manual);
-  }, [controlPanelValue]);
 
   return (
     <div className={classes.root}>
       {imageSize && (
         <Container className={classes.container}>
-          <SegmentedControl
-            color="blue"
-            value={controlPanelValue}
-            onChange={setControlPanelValue}
-            data={[
-              { label: 'AI mode', value: 'ai' },
-              { label: 'Manual mode', value: 'manual' },
-            ]}
-          />
-
           <Canvas
             ref={(canvas) => (ref = canvas)}
             imgSrc={imageFile}
@@ -121,10 +88,9 @@ const DrawCanvasSection = (ref) => {
             tool={tool}
             onDataUpdate={(data) => canvasClick(data)}
             onFinishDraw={(data) => {
-              canvasClick(data);
+              // canvasClick(data);
               console.log('finish draw');
             }}
-            initialData={points}
           />
           <Button
             size="xl"
@@ -135,10 +101,11 @@ const DrawCanvasSection = (ref) => {
           >
             Clean Canvas
           </Button>
+          {lineLength ? <Title>{lineLength}m</Title> : <Title> </Title>}
         </Container>
       )}
     </div>
   );
 };
 
-export default DrawCanvasSection;
+export default Result;

@@ -1,6 +1,5 @@
 from flask import Flask, request, Response, jsonify
 from flask_cors import CORS
-
 import torch
 from torch import nn
 import torchvision.transforms as transforms
@@ -9,15 +8,38 @@ import numpy as np
 from PIL import Image
 import urllib
 import sys
-sys.path.append("../machine_learning")
+sys.path.append("./machine_learning")
 from semantic_segmentation.utils.pspnet import PSPNet
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import storage
+import random
+import string
+
+cred = credentials.Certificate('./oyster-365512-firebase-adminsdk-722nb-debc2e59fa.json')
+firebase_admin.initialize_app(cred, {
+    'storageBucket': 'oyster-365512.appspot.com'
+})
+
+bucket = storage.bucket()
+def upload_blob(source_file, destination_blob_name):
+
+    blob = bucket.blob(destination_blob_name)
+    blob.upload_from_filename(source_file, content_type='image/png')
+    blob.make_public()
+    url = blob.public_url
+    print(url)
+    print(
+        f"File {source_file} uploaded to {destination_blob_name}."
+    )
+    return url
 
 app = Flask(__name__)
 CORS(app)
 
 # Load model
 model = PSPNet(n_classes=2)
-state_dict = torch.load("../machine_learning/semantic_segmentation/weights/pspnet50_2.pth", map_location={'cuda:0': 'cpu'})
+state_dict = torch.load("./machine_learning/semantic_segmentation/weights/pspnet50_2.pth", map_location={'cuda:0': 'cpu'})
 model.load_state_dict(state_dict)
 model.eval()
 print("Loaded model")
@@ -64,14 +86,25 @@ def predict():
     mask_img = np.array(mask_img)
     # Read the categories
     np_input_image = np.array(input_image)
-    
+
     # 'np_input_image' is the masked img to be saved
     np_input_image[mask_img==1] = [255, 0, 0]
+    data = Image.fromarray(np_input_image)
+    data.save('test.png')
+    randomstring = ''.join(random.choices(string.ascii_uppercase +
+                             string.digits, k=20))
+    imageurl = upload_blob('test.png',"predictions/"+randomstring+".png")
+    area = str(np.sum(mask_img))
+    print(area)
+    print(imageurl)
 
-    area = np.sum(mask_img)
+    prediction_result = {
+            "area": area,
+            "url": imageurl
+        }
 
     return jsonify({
-        "area": area
+        "predictions": [prediction_result]
     })
 
 if __name__ == "__main__":

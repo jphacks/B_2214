@@ -2,9 +2,7 @@ flask
 flask-cors
 gunicorn
 numpy
-
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==1.11.0
-
---extra-index-url https://download.pytorch.org/whl/cpu
+torch
 torchvision
+numpy
+firebase-admin

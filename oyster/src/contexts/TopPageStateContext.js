@@ -12,16 +12,19 @@ export const TopPageStateProvider = (props) => {
   const [imageFile, setImageFile] = useState();
   const [imageSize, setImageSize] = useState();
   const [annotationRef, setAnnotationRef] = useState();
-
-
+  const [showResult, setShowResult] = useState(false);
+  const [manual, setManual] = useState(false);
+  const [controlPanelValue, setControlPanelValue] = useState('ai');
+  const [predictionRequestUrl, setPredictionRequestUrl] = useState('');
+  const [prediction, setPrediction] = useState();
+  const [tool, setTool] = useState('Line');
+  const [lineLength, setLineLength] = useState();
   // metrics selection
   const options = [
     { value: 'm2', text: 'm^2' },
     { value: 'jyo', text: '帖' },
   ];
   const [selectedMetric, setSelectedMetric] = useState(options[0].value);
-
-
 
   return (
     <topPageStateContext.Provider
@@ -43,6 +46,20 @@ export const TopPageStateProvider = (props) => {
         setSelectedMetric,
         annotationRef,
         setAnnotationRef,
+        showResult,
+        setShowResult,
+        manual,
+        setManual,
+        controlPanelValue,
+        setControlPanelValue,
+        predictionRequestUrl,
+        setPredictionRequestUrl,
+        prediction,
+        setPrediction,
+        tool,
+        setTool,
+        lineLength,
+        setLineLength,
         // objects
         options,
       }}
