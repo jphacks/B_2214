@@ -64,6 +64,8 @@ const CaluculateSection = () => {
           value={inputArea}
           withAsterisk
           min={0}
+          precision={1}
+          step={0.1}
           disabled={showResult}
           // error="input number"
           onChange={(inputArea) => setInputArea(inputArea)}

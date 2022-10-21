@@ -1,11 +1,26 @@
-import { createStyles, Button, Container, Text, Progress } from '@mantine/core';
+import {
+  createStyles,
+  Button,
+  Container,
+  Text,
+  Progress,
+  Grid,
+  Image as ReactImage,
+  Stepper,
+  useMantineTheme,
+  Stack,
+} from '@mantine/core';
 import { IconRefresh } from '@tabler/icons';
 import { collection, doc } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import Resizer from "react-image-file-resizer";
 
 import { useTopPageState } from '../../hooks/useTopPageState';
+import { useMediumSize } from '../../styles/breakpoints';
+import sampleImage1 from '../../utils/SampleImage/sample1.jpeg';
+import sampleImage2 from '../../utils/SampleImage/sample2.jpeg';
 import { db, storage, STATE_CHANGED } from '../../utils/firebase';
 
 const useStyles = createStyles((theme) => ({
@@ -20,8 +35,12 @@ const useStyles = createStyles((theme) => ({
     alignItems: 'center',
     backgroundColor: theme.colors.gray[0],
     [theme.fn.smallerThan('md')]: {
-      padding: `${theme.spacing.md}px ${theme.spacing.sm}px  ${theme.spacing.sm}px`,
+      padding: `${theme.spacing.xs}px ${theme.spacing.sm}px  ${theme.spacing.sm}px`,
     },
+  },
+  stepContainer: {
+    margin: '0',
+    padding: `${theme.spacing.md}px`,
   },
   buttonContainer: {
     margin: '0',
@@ -61,10 +80,29 @@ const useStyles = createStyles((theme) => ({
       width: '80vw',
     },
   },
+  imageContainer: {
+    backgroundColor: theme.colors.gray[0],
+    padding: theme.spacing.lg,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    [theme.fn.smallerThan('md')]: {
+      padding: `0px`,
+    },
+  },
+  exampleImage: {
+    marginTop: theme.spacing.lg,
+    [theme.fn.smallerThan('md')]: {
+      margin: theme.spacing.sm,
+    },
+  },
 }));
 
 const DropImageSection = () => {
   const { classes } = useStyles();
+  const theme = useMantineTheme();
+  const isMediumSize = useMediumSize(theme);
 
   const {
     imageSize,
@@ -73,6 +111,12 @@ const DropImageSection = () => {
     setAnnotationRef,
     setShowResult,
     setControlPanelValue,
+    setPredictionImageFile,
+    setPredictionImageSize,
+    setSmallImageFile,
+    setSmallImageSize,
+    setLargeImageFile,
+    setLargeImageSize,
   } = useTopPageState();
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -86,6 +130,7 @@ const DropImageSection = () => {
       'image/jpeg': [],
       // 'image/png': [],
     },
+    maxSize: 1000000,
     onDrop,
   });
 
@@ -108,6 +153,130 @@ const DropImageSection = () => {
 
   // Creates a Firebase Upload Task
   const uploadFile = async (file) => {
+    const imgOriginal = new Image();
+    imgOriginal.src = URL.createObjectURL(file);
+    imgOriginal.onload = () => {
+
+      if(parseInt(imgOriginal.width)<250){
+        setSmallImageFile(imgOriginal.src);
+        setSmallImageSize({
+          height: imgOriginal.height,
+          width: imgOriginal.width,
+        })
+        setLargeImageFile(imgOriginal.src);
+        setLargeImageSize({
+          height: imgOriginal.height,
+          width: imgOriginal.width,
+        })
+        setImageFile(imgOriginal.src);
+        setImageSize({
+          height: imgOriginal.height,
+          width: imgOriginal.width,
+        })
+      }else if(parseInt(imgOriginal.width)>=250&&parseInt(imgOriginal.width)<=750){
+        Resizer.imageFileResizer(
+          file,
+          250,
+          500,
+          "JPEG",
+          100,
+          0,
+          (uri) => {
+            setSmallImageFile(uri);
+            const smallImg = new Image();
+            smallImg.src = uri;
+            smallImg.onload = () => {
+              setSmallImageSize({
+                height: smallImg.height,
+                width: smallImg.width,
+              })
+              if(isMediumSize){
+                setImageFile(uri);
+                setImageSize({
+                  height: smallImg.height,
+                  width: smallImg.width,
+                })
+              }
+            };
+          },
+          "base64",
+        );
+        setLargeImageFile(imgOriginal.src);
+        setLargeImageSize({
+          height: imgOriginal.height,
+          width: imgOriginal.width,
+        })
+        if(!isMediumSize){
+          setImageFile(imgOriginal.src);
+          setImageSize({
+            height: imgOriginal.height,
+            width: imgOriginal.width,
+          })
+        }
+      }else{
+        Resizer.imageFileResizer(
+          file,
+          250,
+          500,
+          "JPEG",
+          100,
+          0,
+          (uri) => {
+            setSmallImageFile(uri);
+            const smallImg = new Image();
+            smallImg.src = uri;
+            smallImg.onload = () => {
+              setSmallImageSize({
+                height: smallImg.height,
+                width: smallImg.width,
+              })
+              if(isMediumSize){
+                setImageFile(uri);
+                setImageSize({
+                  height: smallImg.height,
+                  width: smallImg.width,
+                })
+              }
+            };
+          },
+          "base64",
+          0,
+          0,
+        );
+        Resizer.imageFileResizer(
+          file,
+          750,
+          1000,
+          "JPEG",
+          100,
+          0,
+          (uri) => {
+            setLargeImageFile(uri);
+            const largeImg = new Image();
+            largeImg.src = uri;
+            largeImg.onload = () => {
+              setLargeImageSize({
+                height: largeImg.height,
+                width: largeImg.width,
+              })
+              if(!isMediumSize){
+                setImageFile(uri);
+                setImageSize({
+                  height: largeImg.height,
+                  width: largeImg.width,
+                })
+              }
+            };
+          },
+          "base64",
+          0,
+          0,
+        );
+
+      }
+    }
+
+
     // Get the file
     // const file = Array.from(e.target.files)[0];
     const extension = file.type.split('/')[1];
@@ -117,7 +286,7 @@ const DropImageSection = () => {
     setUploading(true);
 
     // Starts the upload
-    const task = uploadBytesResumable(fileRef, file);
+    const task = uploadBytesResumable(fileRef, file);  // we should be using resized file if the image is too big, but not implimented yet
 
     // Listen to updates to upload task
     task.on(STATE_CHANGED, (snapshot) => {
@@ -133,26 +302,43 @@ const DropImageSection = () => {
       .then((d) => getDownloadURL(fileRef))
       .then((url) => {
         setUploading(false);
-        const img = new Image();
-        console.log(url);
-        setImageFile(url);
-        img.src = url;
-        img.onload = () => {
-          setImageSize({
-            height: img.height,
-            width: img.width,
+        const imgUpload = new Image();
+        imgUpload.src = url;
+        imgUpload.onload = () => {
+          setPredictionImageSize({
+            height: imgUpload.height,
+            width: imgUpload.width,
           });
-          console.log(img.height);
-          console.log(img.width);
         };
+        setPredictionImageFile(url);
         setAnnotationRef(doc(collection(db, 'annotation')));
         setControlPanelValue('ai');
         setShowResult(false);
       });
+
   };
 
   return (
     <div className={imageSize ? classes.buttonContainer : classes.root}>
+      {!imageSize && (
+        <div className={classes.stepContainer}>
+          <Stepper
+            orientation={isMediumSize ? 'vertical' : 'horizontal'}
+            size="md"
+            // size={isMediumSize ? 'xs' : 'md'}
+            active={0}
+            color="blue"
+            classNames={classes}
+          >
+            <Stepper.Step label="Step 1" description="Upload Image" />
+            <Stepper.Step
+              label="Step 2"
+              description="Surround Image and Input Area"
+            />
+            <Stepper.Step label="Step 3" description="Click Two Points" />
+          </Stepper>
+        </div>
+      )}
       <div {...getRootProps()}>
         {imageSize ? (
           <div className={classes.button}>
@@ -174,12 +360,25 @@ const DropImageSection = () => {
             ) : (
               <Text>
                 Drag and drop the image here <br /> or <br /> click to select
-                the image{' '}
+                the image{' '}<br />(jpeg, ~1MB)
               </Text>
             )}
           </Container>
         )}
       </div>
+      {!imageSize && (
+        <Stack>
+        <Text align="center" size={isMediumSize ? "20px" : "30px"} className={classes.exampleImage}>↓ or try with an example image</Text>
+        <Grid className={classes.imageContainer}>
+          <Grid.Col span={isMediumSize ? 6 : 4}>
+            <ReactImage src={sampleImage1} />
+          </Grid.Col>
+          <Grid.Col span={isMediumSize ? 6 : 4}>
+            <ReactImage src={sampleImage2} />
+          </Grid.Col>
+        </Grid>
+        </Stack>
+      )}
     </div>
   );
 };

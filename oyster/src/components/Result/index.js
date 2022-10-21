@@ -1,9 +1,17 @@
 import Canvas from '@kazuyahirotsu/react-canvas-polygons';
-import { Button, createStyles, Container, Title } from '@mantine/core';
+import {
+  Button,
+  createStyles,
+  Container,
+  Title,
+  Stepper,
+  useMantineTheme,
+} from '@mantine/core';
 import { IconEraser } from '@tabler/icons';
 import { useEffect, useState } from 'react';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
+import { useMediumSize } from '../../styles/breakpoints';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -17,6 +25,10 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan('md')]: {
       padding: `${theme.spacing.md}px ${theme.spacing.sm}px ${theme.spacing.md}px`,
     },
+  },
+  stepContainer: {
+    margin: '0',
+    padding: `${theme.spacing.md}px`,
   },
   button: {
     gap: theme.spacing.md,
@@ -33,11 +45,16 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: theme.radius.md,
+    [theme.fn.smallerThan('md')]: {
+      padding: `${theme.spacing.xs}px ${theme.spacing.xs}px ${theme.spacing.xs}px`,
+    },
   },
 }));
 
 const Result = (ref) => {
   const { classes } = useStyles();
+  const theme = useMantineTheme();
+  const isMediumSize = useMediumSize(theme);
   const { imageFile, imageSize, scale } = useTopPageState();
   const [tool, setTool] = useState('Polygon');
   const [lineLength, setLineLength] = useState();
@@ -64,20 +81,34 @@ const Result = (ref) => {
   // get point data and calculate how many pixels are in the polygon
   const canvasClick = async (data) => {
     if (data.Line[0]) {
-      console.log(data.Line[0]);
       const tmp =
         scale *
         Math.sqrt(
           Math.pow(data.Line[0][0][0] - data.Line[0][1][0], 2) +
             Math.pow(data.Line[0][0][1] - data.Line[0][1][1], 2),
         );
-      console.log(tmp);
       setLineLength(Number.parseFloat(tmp).toFixed(2));
     }
   };
 
   return (
     <div className={classes.root}>
+      <div className={classes.stepContainer}>
+        <Stepper
+          orientation={isMediumSize ? 'vertical' : 'horizontal'}
+          size="md"
+          // size={isMediumSize ? 'xs' : 'md'}
+          active={2}
+          color="blue"
+        >
+          <Stepper.Step label="Step 1" description="Upload Image" />
+          <Stepper.Step
+            label="Step 2"
+            description="Surround Image and Input Area"
+          />
+          <Stepper.Step label="Step 3" description="Click Two Points" />
+        </Stepper>
+      </div>
       {imageSize && (
         <Container className={classes.container}>
           <Canvas

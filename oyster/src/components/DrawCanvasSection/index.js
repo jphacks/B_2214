@@ -4,12 +4,15 @@ import {
   Button,
   Container,
   SegmentedControl,
+  Stepper,
+  useMantineTheme,
 } from '@mantine/core';
 import { IconEraser } from '@tabler/icons';
 import { setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
+import { useMediumSize } from '../../styles/breakpoints';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -26,6 +29,10 @@ const useStyles = createStyles((theme) => ({
       padding: `${theme.spacing.md}px ${theme.spacing.sm}px ${theme.spacing.md}px`,
     },
   },
+  stepContainer: {
+    margin: '0',
+    padding: `${theme.spacing.md}px`,
+  },
   container: {
     backgroundColor: theme.colors.blue[0],
     padding: theme.spacing.lg,
@@ -35,11 +42,16 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: theme.radius.md,
+    [theme.fn.smallerThan('md')]: {
+      padding: `${theme.spacing.xs}px ${theme.spacing.xs}px ${theme.spacing.xs}px`,
+    },
   },
 }));
 
 const DrawCanvasSection = (ref) => {
   const { classes } = useStyles();
+  const theme = useMantineTheme();
+  const isMediumSize = useMediumSize(theme);
   const {
     points,
     imageFile,
@@ -47,7 +59,6 @@ const DrawCanvasSection = (ref) => {
     setPoint,
     setPixelArea,
     annotationRef,
-    manual,
     setManual,
     controlPanelValue,
     setControlPanelValue,
@@ -77,30 +88,44 @@ const DrawCanvasSection = (ref) => {
   const area = require('area-polygon');
   const canvasClick = async (data) => {
     setPoint(data);
-    console.log(points);
     if (
       points &&
       Object.keys(points).length > 1 &&
       points[String(Object.keys(points)[1])].length > 2
     ) {
       setPixelArea(area(points[String(Object.keys(points)[1])]));
-      console.log(area(points[String(Object.keys(points)[1])]));
       const info = {
         imageSrc: imageFile,
         points: String(points[String(Object.keys(points)[1])]),
       };
       await setDoc(annotationRef, info);
+      console.log("manual pixel area set")
     }
   };
 
   useEffect(() => {
     if (controlPanelValue === 'manual') setManual(true);
     else setManual(false);
-    console.log(controlPanelValue, manual);
   }, [controlPanelValue]);
 
   return (
     <div className={classes.root}>
+      <div className={classes.stepContainer}>
+        <Stepper
+          orientation={isMediumSize ? 'vertical' : 'horizontal'}
+          size="md"
+          // size={isMediumSize ? 'xs' : 'md'}
+          active={1}
+          color="blue"
+        >
+          <Stepper.Step label="Step 1" description="Upload Image" />
+          <Stepper.Step
+            label="Step 2"
+            description="Surround Image and Input Area"
+          />
+          <Stepper.Step label="Step 3" description="Click Two Points" />
+        </Stepper>
+      </div>
       {imageSize && (
         <Container className={classes.container}>
           <SegmentedControl
