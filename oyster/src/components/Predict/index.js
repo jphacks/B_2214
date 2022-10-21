@@ -72,9 +72,6 @@ const Predict = () => {
     predictionImageSize,
   } = useTopPageState();
 
-  const theme = useMantineTheme();
-  const isMediumSize = useMediumSize(theme);
-
   useEffect(() => {
     if (predictionRequestUrl !== imageUrl) {
       setPrediction();
