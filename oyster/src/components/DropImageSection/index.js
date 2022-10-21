@@ -8,6 +8,7 @@ import {
   Image as ReactImage,
   Stepper,
   useMantineTheme,
+  Stack,
 } from '@mantine/core';
 import { IconRefresh } from '@tabler/icons';
 import { collection, doc } from 'firebase/firestore';
@@ -88,6 +89,12 @@ const useStyles = createStyles((theme) => ({
     alignItems: 'center',
     [theme.fn.smallerThan('md')]: {
       padding: `0px`,
+    },
+  },
+  exampleImage: {
+    marginTop: theme.spacing.lg,
+    [theme.fn.smallerThan('md')]: {
+      margin: theme.spacing.sm,
     },
   },
 }));
@@ -321,6 +328,7 @@ const DropImageSection = () => {
             // size={isMediumSize ? 'xs' : 'md'}
             active={0}
             color="blue"
+            classNames={classes}
           >
             <Stepper.Step label="Step 1" description="Upload Image" />
             <Stepper.Step
@@ -359,6 +367,8 @@ const DropImageSection = () => {
         )}
       </div>
       {!imageSize && (
+        <Stack>
+        <Text align="center" size={isMediumSize ? "20px" : "30px"} className={classes.exampleImage}>↓ or try with an example image</Text>
         <Grid className={classes.imageContainer}>
           <Grid.Col span={isMediumSize ? 6 : 4}>
             <ReactImage src={sampleImage1} />
@@ -367,6 +377,7 @@ const DropImageSection = () => {
             <ReactImage src={sampleImage2} />
           </Grid.Col>
         </Grid>
+        </Stack>
       )}
     </div>
   );

@@ -1,11 +1,11 @@
-import { Grid, createStyles, Container, useMantineTheme, Header, AppShell, Footer } from '@mantine/core';
+import { Grid, createStyles, Container, useMantineTheme, Header, AppShell, Footer, Text } from '@mantine/core';
 import { useEffect } from 'react';
 
 import CalculateSection from '../../components/CalculateSection';
 import DrawCanvasSection from '../../components/DrawCanvasSection';
 import DropImageSection from '../../components/DropImageSection';
 import { FooterLinks } from '../../components/FooterLinks/FooterLinks';
-import { Logo } from '../../components/Logo/logo';
+// import { Logo } from '../../components/Logo/logo';
 import Predict from '../../components/Predict';
 import Result from '../../components/Result';
 import { useTopPageState } from '../../hooks/useTopPageState';
@@ -54,7 +54,19 @@ const StateHandler = () => {
         fixed={false}
         padding="sm"
         header={<Header height={60} p="xs">
-          <Logo></Logo>
+          {/* <Logo></Logo> */}
+          <Text
+            component="span"
+            align="center"
+            variant="gradient"
+            gradient={{ from: 'indigo', to: 'cyan', deg: 45 }}
+            size="30px"
+            weight={700}
+            style={{
+               marginLeft: '20px',
+
+              }}
+          >まどりーだー</Text>
         </Header>}
         footer={<Footer height={175} >
           <FooterLinks links = {[{link:'https://github.com/jphacks/B_2214',label:'github repo'}]}></FooterLinks>
