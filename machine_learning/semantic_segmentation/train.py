@@ -35,8 +35,8 @@ class DataTransform():
     def __init__(self, input_size, color_mean, color_std):
         self.data_transform = {
             'train': Compose([
-                Scale(scale=[0.5, 1.5]),
-                RandomMirror(0.2),
+                Scale(scale=[0.8, 1.1]),
+                RandomMirror(0.1),
                 Resize(input_size),
                 Normalize_Tensor(color_mean, color_std)
             ]),
@@ -81,7 +81,10 @@ class FloorPlanDataset(data.Dataset):
             img, anno_class_img = self.transform(self.phase, img, anno_class_img)
 
             return img, anno_class_img
+
         else:
+
+
             img, anno_class_img = self.transform(self.phase, img, anno_class_img)
 
             return img, anno_class_img
@@ -123,7 +126,7 @@ def weights_init(m):
             nn.init.constant_(m.bias, 0.0)
 
 def lambda_epoch(epoch):
-    max_epoch = 100
+    max_epoch = 30
     return math.pow((1-epoch/max_epoch), 0.9)
 
 def train_model(net, dataloaders_dict, criterion, scheduler, optimizer, num_epochs, batch_size):
@@ -145,7 +148,6 @@ def train_model(net, dataloaders_dict, criterion, scheduler, optimizer, num_epoc
 
     # イテレーションカウンタをセット
     iteration = 1
-    logs = []
 
     # multiple minibatch
     batch_multiplier = 3
@@ -195,7 +197,7 @@ def train_model(net, dataloaders_dict, criterion, scheduler, optimizer, num_epoc
                         count -= 1
 
                         if (iteration % 10 == 0):
-                            print('iteration {} || Loss: {:.4f}'.format(
+                            print('イテレーション {} || Loss: {:.4f}'.format(
                                 iteration, loss.item()/batch_size*batch_multiplier))
 
                         epoch_train_loss += loss.item() * batch_multiplier
@@ -208,7 +210,7 @@ def train_model(net, dataloaders_dict, criterion, scheduler, optimizer, num_epoc
         print('epoch {} || Epoch_TRAIN_Loss:{:.4f} ||Epoch_VAL_Loss:{:.4f}'.format(
             epoch+1, epoch_train_loss/num_train_imgs, epoch_val_loss/num_val_imgs))
 
-        torch.save(net.state_dict(), 'weights/pspnet50_10210432_' + str(epoch+1) + '.pth')
+        torch.save(net.state_dict(), 'weights/pspnet50_1021_1919' + str(epoch+1) + '.pth')
 
 def main(args):
     data_dir = Path('./dataset/data')
@@ -232,10 +234,7 @@ def main(args):
     for val_img in val_imgs:
         val_img_list.append(str(data_dir / f'{val_img}.jpg'))
         val_anno_list.append(str(anno_dir / f'{val_img}.jpg'))
-    train_img_list *= 10
-    train_anno_list *= 10
-    val_img_list *= 10
-    val_anno_list *= 10
+
     color_mean = (0.485, 0.456, 0.406)
     color_std = (0.229, 0.224, 0.225)
 
@@ -249,10 +248,10 @@ def main(args):
     batch_size = args.batch_size
 
     train_dataloader = data.DataLoader(
-        train_dataset, batch_size=batch_size, shuffle=True)
+        train_dataset, batch_size=batch_size, shuffle=True, drop_last=True)
 
     val_dataloader = data.DataLoader(
-        val_dataset, batch_size=batch_size, shuffle=False)
+        val_dataset, batch_size=batch_size, shuffle=False, drop_last=True)
 
     # 辞書型変数にまとめる
     dataloaders_dict = {"train": train_dataloader, "val": val_dataloader}
@@ -261,6 +260,7 @@ def main(args):
 
     state_dict = torch.load("weights/pspnet50_ADE20K.pth")
     model.load_state_dict(state_dict)
+
     n_classes = 2
     model.decode_feature.classification = nn.Conv2d(
         in_channels=512, out_channels=n_classes, kernel_size=1, stride=1, padding=0)
@@ -270,6 +270,7 @@ def main(args):
 
     model.decode_feature.classification.apply(weights_init)
     model.aux.classification.apply(weights_init)
+
     criterion = PSPLoss(aux_weight=0.4)
     optimizer = optim.SGD([
                                 {'params': model.feature_conv.parameters(), 'lr': 1e-3},
@@ -281,6 +282,7 @@ def main(args):
                                 {'params': model.decode_feature.parameters(), 'lr': 1e-2},
                                 {'params': model.aux.parameters(), 'lr': 1e-2},
                                 ], momentum=0.9, weight_decay=0.0001)
+
     scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_epoch)
     num_epochs = args.num_epochs
     train_model(model, dataloaders_dict, criterion, scheduler, optimizer, num_epochs=num_epochs, batch_size=batch_size)

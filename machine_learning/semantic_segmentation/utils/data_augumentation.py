@@ -67,6 +67,7 @@ class Scale(object):
 
 
 class RandomMirror(object):
+
     def __init__(self, p_thre):
         self.p_thre = p_thre
 
