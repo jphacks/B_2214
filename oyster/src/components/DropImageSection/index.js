@@ -96,6 +96,7 @@ const DropImageSection = () => {
       'image/jpeg': [],
       // 'image/png': [],
     },
+    maxSize: 1000000,
     onDrop,
   });
 
@@ -306,7 +307,7 @@ const DropImageSection = () => {
             ) : (
               <Text>
                 Drag and drop the image here <br /> or <br /> click to select
-                the image{' '}
+                the image{' '}<br />(jpeg, ~1MB)
               </Text>
             )}
           </Container>
