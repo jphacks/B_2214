@@ -76,21 +76,32 @@ def predict():
     except: urllib.request.urlretrieve(url, filename)
     input_image = Image.open(filename)
     input_tensor = preprocess(input_image)
-    input_batch = input_tensor.unsqueeze(0) # create a mini-batch as expected by the model
+    input_batch = input_tensor.unsqueeze(0).to(device) # create a mini-batch as expected by the model
     output = model(input_batch)
 
-    y = output[0][0].detach().numpy()  # y：torch.Size([1, 21, 475, 475])
+    y = output[0][0].detach().cpu().numpy()  # y：torch.Size([1, 21, 475, 475])
     y = np.argmax(y, axis=0)
     mask_img = Image.fromarray(np.uint8(y), mode='P')
     mask_img = mask_img.resize((input_image.size), Image.NEAREST)
-    mask_img = np.array(mask_img)
-    # Read the categories
-    np_input_image = np.array(input_image)
+    rgb_mask_img = mask_img.convert('RGBA')
 
-    # 'np_input_image' is the masked img to be saved
-    np_input_image[mask_img==1] = [255, 0, 0]
-    data = Image.fromarray(np_input_image)
-    data.save('test.png')
+    trans_img = Image.new('RGBA', rgb_mask_img.size, (0, 0, 0, 0))
+
+    for x in range(rgb_mask_img.size[0]):
+        for y in range(rgb_mask_img.size[1]):
+            # 推論結果画像のピクセルデータを取得
+            pixel = rgb_mask_img.getpixel((x, y))
+            r, g, b, a = pixel
+
+            # (0, 0, 0)の背景ならそのままにして透過させる
+            if pixel[0] == 0 and pixel[1] == 0 and pixel[2] == 0:
+                continue
+            else:
+                # それ以外の色は用意した画像にピクセルを書き込む
+                trans_img.putpixel((x, y), (255, 0, 0, 100))
+
+    rbga_result = Image.alpha_composite(input_image.convert('RGBA'), trans_img).convert('RGB')
+    rbga_result.save('test.png')
     randomstring = ''.join(random.choices(string.ascii_uppercase +
                              string.digits, k=20))
     imageurl = upload_blob('test.png',"predictions/"+randomstring+".png")
