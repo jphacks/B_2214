@@ -1,4 +1,12 @@
-import { createStyles, Button, Container, Text, Progress } from '@mantine/core';
+import {
+  createStyles,
+  Button,
+  Container,
+  Text,
+  Progress,
+  Grid,
+  Image as ReactImage,
+} from '@mantine/core';
 import { IconRefresh } from '@tabler/icons';
 import { collection, doc } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -6,6 +14,8 @@ import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
+import sampleImage1 from '../../utils/SampleImage/sample1.jpeg';
+import sampleImage2 from '../../utils/SampleImage/sample2.jpeg';
 import { db, storage, STATE_CHANGED } from '../../utils/firebase';
 
 const useStyles = createStyles((theme) => ({
@@ -60,6 +70,14 @@ const useStyles = createStyles((theme) => ({
       padding: theme.spacing.sm,
       width: '80vw',
     },
+  },
+  imageContainer: {
+    backgroundColor: theme.colors.gray[0],
+    padding: theme.spacing.lg,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    textAlign: 'center',
   },
 }));
 
@@ -180,6 +198,16 @@ const DropImageSection = () => {
           </Container>
         )}
       </div>
+      {!imageSize && (
+        <Grid className={classes.imageContainer}>
+          <Grid.Col span={4}>
+            <ReactImage src={sampleImage1} />
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <ReactImage src={sampleImage2} />
+          </Grid.Col>
+        </Grid>
+      )}
     </div>
   );
 };
