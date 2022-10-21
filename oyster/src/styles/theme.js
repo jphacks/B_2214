@@ -49,6 +49,7 @@ export const lightTheme = {
   colorScheme: 'light',
   dateFormat: 'yyyy年MM月dd日',
   datesLocale: 'ja',
+  backgroundColor: paletteColors.grey[0],
   white,
   black,
   colors: paletteColors,

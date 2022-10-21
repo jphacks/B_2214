@@ -1,8 +1,10 @@
-import { Grid, createStyles, Container, useMantineTheme } from '@mantine/core';
+import { Grid, createStyles, Container, useMantineTheme, Header, AppShell, Footer } from '@mantine/core';
 
 import CalculateSection from '../../components/CalculateSection';
 import DrawCanvasSection from '../../components/DrawCanvasSection';
 import DropImageSection from '../../components/DropImageSection';
+import { FooterLinks } from '../../components/FooterLinks/FooterLinks';
+import { Logo } from '../../components/Logo/logo';
 import Predict from '../../components/Predict';
 import Result from '../../components/Result';
 import { useTopPageState } from '../../hooks/useTopPageState';
@@ -36,6 +38,19 @@ const StateHandler = () => {
   const { imageSize, manual, showResult } = useTopPageState();
   return (
     <>
+      <AppShell
+        fixed={false}
+        padding="md"
+        header={<Header height={60} p="xs">
+          <Logo></Logo>
+        </Header>}
+        footer={<Footer height={175} >
+          <FooterLinks links = {[{link:'https://github.com/jphacks/B_2214',label:'github repo'}]}></FooterLinks>
+          </Footer>}
+        styles={(theme) => ({
+          main: { backgroundColor: theme.colors.gray[0] },
+        })}
+      >
       {isMediumSize ? (
         <>
           {imageSize ? (
@@ -82,6 +97,7 @@ const StateHandler = () => {
           )}
         </>
       )}
+      </AppShell>
     </>
   );
 };
