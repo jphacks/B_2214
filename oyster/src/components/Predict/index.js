@@ -100,8 +100,6 @@ const Predict = () => {
     // setPrediction({"prediction":[{"area":100,"url":"https://firebasestorage.googleapis.com/v0/b/oyster-365512.appspot.com/o/predictions%2F01Y2NUTSA3GRTJ30JYLV.png?alt=media&token=89b062d2-cb98-41ee-88c5-e7cfe63e7cd9"}]});
   }, [imageUrl]);
 
-  setPixelArea(prediction?.prediction[0].area);
-
   useEffect(() => {
     if (controlPanelValue === 'manual') setManual(true);
     else setManual(false);
@@ -113,7 +111,8 @@ const Predict = () => {
     }else{
       setPixelArea(prediction?.prediction[0].area*((largeImageSize.width*largeImageSize.height)/(predictionImageSize.width*predictionImageSize.height)));
     }
-  }, [isMediumSize]);
+    console.log("prediction pixel area set")
+  }, [isMediumSize, prediction]);
 
 // if you use prediction to calc and change window size in result mode, it will not be correct
 

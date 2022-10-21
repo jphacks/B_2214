@@ -1,5 +1,5 @@
-import { createStyles, Container, Group, Anchor } from '@mantine/core';
-import { MantineLogo } from '@mantine/ds';
+import { createStyles, Container, Group, Anchor, Text } from '@mantine/core';
+// import { MantineLogo } from '@mantine/ds';
 
 // import { Logo } from '../Logo/logo';
 
@@ -40,7 +40,12 @@ export function FooterLinks({links}) {
   return (
     <div className={classes.footer}>
       <Container className={classes.inner}>
-        <MantineLogo size={28} />
+        {/* <MantineLogo size={28} /> */}
+        <Text
+            align="center"
+            size="20px"
+            weight={700}
+          >まどりーだー</Text>
         <Group className={classes.links}>{items}</Group>
       </Container>
     </div>

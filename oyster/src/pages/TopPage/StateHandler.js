@@ -112,7 +112,7 @@ const StateHandler = () => {
               <Grid.Col span={4} className={classes.gridCol}>
                 <Container className={classes.container}>
                   <DropImageSection />
-                  <CalculateSection />
+                  {showResult?<></>:<CalculateSection />}
                 </Container>
               </Grid.Col>
             </Grid>

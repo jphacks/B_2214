@@ -99,6 +99,7 @@ const DrawCanvasSection = (ref) => {
         points: String(points[String(Object.keys(points)[1])]),
       };
       await setDoc(annotationRef, info);
+      console.log("manual pixel area set")
     }
   };
 
@@ -142,8 +143,6 @@ const DrawCanvasSection = (ref) => {
             imgSrc={imageFile}
             height={imageSize.height}
             width={imageSize.width}
-            // height={750}
-            // width={750}
             tool={tool}
             onDataUpdate={(data) => canvasClick(data)}
             onFinishDraw={(data) => {
