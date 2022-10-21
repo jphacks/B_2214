@@ -1,4 +1,5 @@
 import { Grid, createStyles, Container, useMantineTheme, Header, AppShell, Footer } from '@mantine/core';
+import { useEffect } from 'react';
 
 import CalculateSection from '../../components/CalculateSection';
 import DrawCanvasSection from '../../components/DrawCanvasSection';
@@ -35,12 +36,23 @@ const StateHandler = () => {
   const { classes } = useStyles();
   const theme = useMantineTheme();
   const isMediumSize = useMediumSize(theme);
-  const { imageSize, manual, showResult } = useTopPageState();
+  const { predictionImageSize, manual, showResult, smallImageFile, smallImageSize, largeImageFile, largeImageSize, setImageFile, setImageSize } = useTopPageState();
+
+  useEffect(() => {
+    if(isMediumSize){
+      setImageFile(smallImageFile)
+      setImageSize(smallImageSize)
+    }else{
+      setImageFile(largeImageFile)
+      setImageSize(largeImageSize)
+    }
+  }, [isMediumSize]);
+
   return (
     <>
       <AppShell
         fixed={false}
-        padding="md"
+        padding="sm"
         header={<Header height={60} p="xs">
           <Logo></Logo>
         </Header>}
@@ -53,7 +65,7 @@ const StateHandler = () => {
       >
       {isMediumSize ? (
         <>
-          {imageSize ? (
+          {predictionImageSize ? (
             <div className={classes.root}>
               {showResult ? (
                 <Result />
@@ -74,7 +86,7 @@ const StateHandler = () => {
         </>
       ) : (
         <>
-          {imageSize ? (
+          {predictionImageSize ? (
             <Grid className={classes.grid}>
               <Grid.Col span={8} className={classes.gridCol}>
                 {showResult ? (

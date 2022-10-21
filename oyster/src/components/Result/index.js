@@ -33,6 +33,9 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: theme.radius.md,
+    [theme.fn.smallerThan('md')]: {
+      padding: `${theme.spacing.xs}px ${theme.spacing.xs}px ${theme.spacing.xs}px`,
+    },
   },
 }));
 
@@ -64,14 +67,12 @@ const Result = (ref) => {
   // get point data and calculate how many pixels are in the polygon
   const canvasClick = async (data) => {
     if (data.Line[0]) {
-      console.log(data.Line[0]);
       const tmp =
         scale *
         Math.sqrt(
           Math.pow(data.Line[0][0][0] - data.Line[0][1][0], 2) +
             Math.pow(data.Line[0][0][1] - data.Line[0][1][1], 2),
         );
-      console.log(tmp);
       setLineLength(Number.parseFloat(tmp).toFixed(2));
     }
   };

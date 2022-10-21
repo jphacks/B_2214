@@ -35,6 +35,9 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: theme.radius.md,
+    [theme.fn.smallerThan('md')]: {
+      padding: `${theme.spacing.xs}px ${theme.spacing.xs}px ${theme.spacing.xs}px`,
+    },
   },
 }));
 
@@ -47,7 +50,6 @@ const DrawCanvasSection = (ref) => {
     setPoint,
     setPixelArea,
     annotationRef,
-    manual,
     setManual,
     controlPanelValue,
     setControlPanelValue,
@@ -77,14 +79,12 @@ const DrawCanvasSection = (ref) => {
   const area = require('area-polygon');
   const canvasClick = async (data) => {
     setPoint(data);
-    console.log(points);
     if (
       points &&
       Object.keys(points).length > 1 &&
       points[String(Object.keys(points)[1])].length > 2
     ) {
       setPixelArea(area(points[String(Object.keys(points)[1])]));
-      console.log(area(points[String(Object.keys(points)[1])]));
       const info = {
         imageSrc: imageFile,
         points: String(points[String(Object.keys(points)[1])]),
@@ -96,7 +96,6 @@ const DrawCanvasSection = (ref) => {
   useEffect(() => {
     if (controlPanelValue === 'manual') setManual(true);
     else setManual(false);
-    console.log(controlPanelValue, manual);
   }, [controlPanelValue]);
 
   return (
@@ -118,6 +117,8 @@ const DrawCanvasSection = (ref) => {
             imgSrc={imageFile}
             height={imageSize.height}
             width={imageSize.width}
+            // height={750}
+            // width={750}
             tool={tool}
             onDataUpdate={(data) => canvasClick(data)}
             onFinishDraw={(data) => {

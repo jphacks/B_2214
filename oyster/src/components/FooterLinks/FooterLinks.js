@@ -30,10 +30,9 @@ export function FooterLinks({links}) {
       color="dimmed"
       key={link.label}
       href={link.link}
-      onClick={(event) => event.preventDefault()}
+      target="_blank"
       size="sm"
     >
-        {console.log(link)}
       {link.label}
     </Anchor>
   ));

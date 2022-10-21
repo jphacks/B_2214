@@ -5,11 +5,13 @@ import {
   Loader,
   Text,
   Button,
+  useMantineTheme,
 } from '@mantine/core';
 import { IconEraser } from '@tabler/icons';
 import { useEffect } from 'react';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
+import { useMediumSize } from '../../styles/breakpoints';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -35,14 +37,16 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: theme.radius.md,
+    [theme.fn.smallerThan('md')]: {
+      padding: `${theme.spacing.xs}px ${theme.spacing.xs}px ${theme.spacing.xs}px`,
+    },
   },
 }));
 
 const Predict = () => {
   const { classes } = useStyles();
   const {
-    imageFile: imageUrl,
-    manual,
+    predictionImageFile: imageUrl,
     setManual,
     controlPanelValue,
     setControlPanelValue,
@@ -51,10 +55,18 @@ const Predict = () => {
     prediction,
     setPrediction,
     setPixelArea,
+    imageSize,
+    smallImageSize,
+    largeImageSize,
+    predictionImageSize,
   } = useTopPageState();
+
+  const theme = useMantineTheme();
+  const isMediumSize = useMediumSize(theme);
 
   useEffect(() => {
     if (predictionRequestUrl !== imageUrl) {
+      setPrediction();
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -77,16 +89,25 @@ const Predict = () => {
         });
       setPredictionRequestUrl(imageUrl);
     }
+    // setPrediction({"prediction":[{"area":100,"url":"https://firebasestorage.googleapis.com/v0/b/oyster-365512.appspot.com/o/predictions%2F01Y2NUTSA3GRTJ30JYLV.png?alt=media&token=89b062d2-cb98-41ee-88c5-e7cfe63e7cd9"}]});
   }, [imageUrl]);
 
   setPixelArea(prediction?.prediction[0].area);
-  console.log(prediction?.prediction[0].area);
 
   useEffect(() => {
     if (controlPanelValue === 'manual') setManual(true);
     else setManual(false);
-    console.log(controlPanelValue, manual);
   }, [controlPanelValue]);
+
+  useEffect(() => {
+    if(isMediumSize){
+      setPixelArea(prediction?.prediction[0].area*((smallImageSize.width*smallImageSize.height)/(predictionImageSize.width*predictionImageSize.height)));
+    }else{
+      setPixelArea(prediction?.prediction[0].area*((largeImageSize.width*largeImageSize.height)/(predictionImageSize.width*predictionImageSize.height)));
+    }
+  }, [isMediumSize]);
+
+// if you use prediction to calc and change window size in result mode, it will not be correct
 
   return (
     <div className={classes.root}>
@@ -103,7 +124,7 @@ const Predict = () => {
         <>
           {prediction ? (
             <>
-              <img src={prediction?.prediction[0].url} />
+              <img src={prediction?.prediction[0].url} width={imageSize.width} height={imageSize.height}/>
               <Button
                 size="xl"
                 color="blue"
