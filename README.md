@@ -8,12 +8,14 @@
 ### 製品説明（具体的な製品の説明）
 1. 間取り図の画像をアップロードするとAIが自動で専有面積のエリアを認識する。
 2. ユーザーは専有面積を入力、もしくは自分で部屋を囲ってその部屋の面積を入力する。
-3. するとユーザーは選択した任意の2点間の距離を確認することができる。
+3. するとユーザーは選択した任意の2点間の距離を確認することができる。  
+  
+プレゼン資料 https://www.canva.com/design/DAFPrXdhNJQ/0MXTmVpMc8oX9PXVrCJ3Og/view?utm_content=DAFPrXdhNJQ&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink
 ### 特長
 #### 1. 特長1
 - 独自開発のセグメンテーションAIモデルを使用
 #### 2. 特長2
-- 手動でユーザーが囲ったデータをサーバーに保存することでAIモデルの学習に利用
+- 手動でユーザーが囲ったデータをサーバーに保存することでAIモデルの再学習に利用
 #### 3. 特長3
 - シンプルで使いやすいUI設計
 ### 解決出来ること
@@ -31,9 +33,9 @@
 - React, Mantine, Vercel
 - Pytorch, Flask, Docker
 - Cloud Functions, Vertex AI, Container Registry, Firebase
+  
 ![Alt text](./architecture.png)
 #### デバイス
-- 
 
 ### 独自技術
 #### ハッカソンで開発した独自機能・技術
