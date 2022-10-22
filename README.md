@@ -10,7 +10,9 @@
 2. ユーザーは専有面積を入力、もしくは自分で部屋を囲ってその部屋の面積を入力する。
 3. するとユーザーは選択した任意の2点間の距離を確認することができる。  
   
-プレゼン資料 https://www.canva.com/design/DAFPrXdhNJQ/0MXTmVpMc8oX9PXVrCJ3Og/view?utm_content=DAFPrXdhNJQ&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink
+プロダクトへのリンク：　https://oyster-ashy.vercel.app/
+  
+プレゼン資料： https://www.canva.com/design/DAFPrXdhNJQ/0MXTmVpMc8oX9PXVrCJ3Og/view?utm_content=DAFPrXdhNJQ&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink
 ### 特長
 #### 1. 特長1
 - 独自開発のセグメンテーションAIモデルを使用
