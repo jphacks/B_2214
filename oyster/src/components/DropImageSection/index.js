@@ -129,7 +129,7 @@ const DropImageSection = () => {
     });
   }, []);
 
-  const { getRootProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
       'image/jpeg': [],
       // 'image/png': [],
@@ -347,6 +347,7 @@ const DropImageSection = () => {
       <div {...getRootProps()}>
         {imageSize ? (
           <div className={classes.button}>
+            <input {...getInputProps()} />
             <Button
               size="xl"
               color="blue"
@@ -357,16 +358,19 @@ const DropImageSection = () => {
             </Button>
           </div>
         ) : (
-          <Container className={classes.container}>
+          <Container className={classes.container} tabIndex='1'>
             {uploading ? (
               <Progress value={progress} color="blue" />
             ) : isDragActive ? (
               <Text>Drop the image here ...</Text>
             ) : (
+              <>
+              <input {...getInputProps()} />
               <Text>
                 Drag and drop the image here <br /> or <br /> click to select
                 the image{' '}<br />(jpeg, ~1MB)
               </Text>
+              </>
             )}
           </Container>
         )}
