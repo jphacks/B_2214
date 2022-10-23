@@ -64,7 +64,6 @@ const StateHandler = () => {
             weight={700}
             style={{
                marginLeft: '20px',
-
               }}
           >まどりーだー</Text>
         </Header>}

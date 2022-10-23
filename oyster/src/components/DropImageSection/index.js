@@ -57,6 +57,10 @@ const useStyles = createStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'left',
+    minHeight: '0px',
+  },
+  step: {
+    minHeight: '0px',
   },
   container: {
     height: '50vh',
@@ -330,12 +334,13 @@ const DropImageSection = () => {
             color="blue"
             classNames={classes}
           >
-            <Stepper.Step label="Step 1" description="Upload Image" />
+            <Stepper.Step label="Step 1" description="Upload Image" className={classes.step}/>
             <Stepper.Step
               label="Step 2"
               description="Surround Image and Input Area"
+              className={classes.step}
             />
-            <Stepper.Step label="Step 3" description="Click Two Points" />
+            <Stepper.Step label="Step 3" description="Click Two Points" className={classes.step}/>
           </Stepper>
         </div>
       )}
