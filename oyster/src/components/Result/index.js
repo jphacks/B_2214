@@ -30,6 +30,9 @@ const useStyles = createStyles((theme) => ({
     margin: '0',
     padding: `${theme.spacing.md}px`,
   },
+  step: {
+    minHeight: '0px',
+  },
   button: {
     gap: theme.spacing.md,
     display: 'flex',
@@ -101,12 +104,13 @@ const Result = (ref) => {
           active={2}
           color="blue"
         >
-          <Stepper.Step label="Step 1" description="Upload Image" />
+          <Stepper.Step label="Step 1" description="Upload Image" className={classes.step}/>
           <Stepper.Step
             label="Step 2"
             description="Surround Image and Input Area"
+            className={classes.step}
           />
-          <Stepper.Step label="Step 3" description="Click Two Points" />
+          <Stepper.Step label="Step 3" description="Click Two Points" className={classes.step}/>
         </Stepper>
       </div>
       {imageSize && (
