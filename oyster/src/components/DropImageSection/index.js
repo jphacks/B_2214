@@ -57,6 +57,10 @@ const useStyles = createStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'left',
+    minHeight: '0px',
+  },
+  step: {
+    minHeight: '0px',
   },
   container: {
     height: '50vh',
@@ -125,7 +129,7 @@ const DropImageSection = () => {
     });
   }, []);
 
-  const { getRootProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
       'image/jpeg': [],
       // 'image/png': [],
@@ -330,18 +334,20 @@ const DropImageSection = () => {
             color="blue"
             classNames={classes}
           >
-            <Stepper.Step label="Step 1" description="Upload Image" />
+            <Stepper.Step label="Step 1" description="Upload Image" className={classes.step}/>
             <Stepper.Step
               label="Step 2"
               description="Surround Image and Input Area"
+              className={classes.step}
             />
-            <Stepper.Step label="Step 3" description="Click Two Points" />
+            <Stepper.Step label="Step 3" description="Click Two Points" className={classes.step}/>
           </Stepper>
         </div>
       )}
       <div {...getRootProps()}>
         {imageSize ? (
           <div className={classes.button}>
+            <input {...getInputProps()} />
             <Button
               size="xl"
               color="blue"
@@ -352,16 +358,19 @@ const DropImageSection = () => {
             </Button>
           </div>
         ) : (
-          <Container className={classes.container}>
+          <Container className={classes.container} tabIndex='1'>
             {uploading ? (
               <Progress value={progress} color="blue" />
             ) : isDragActive ? (
               <Text>Drop the image here ...</Text>
             ) : (
+              <>
+              <input {...getInputProps()} />
               <Text>
                 Drag and drop the image here <br /> or <br /> click to select
                 the image{' '}<br />(jpeg, ~1MB)
               </Text>
+              </>
             )}
           </Container>
         )}
