@@ -42,10 +42,11 @@ const VR = () => {
             <a-box color="red" position="0 2 -5" rotation="0 45 45" scale="2 2 2"></a-box>
 
 
-            {/* <a-entity
-              gltf-model={val}
-              // position= {pos} //right up near
-            ></a-entity> */}
+            <a-entity
+              gltf-model="test.gltf"
+              position= "0 5 0"
+              scale="0.05 0.05 0.05"
+            ></a-entity>
 
             <a-entity id="player">
                 <a-entity id="camera" camera wasd-controls look-controls position="0 1.6 0"></a-entity>
