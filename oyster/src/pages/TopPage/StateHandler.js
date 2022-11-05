@@ -8,6 +8,7 @@ import { FooterLinks } from '../../components/FooterLinks/FooterLinks';
 // import { Logo } from '../../components/Logo/logo';
 import Predict from '../../components/Predict';
 import Result from '../../components/Result';
+import VR from '../../components/VR';
 import { useTopPageState } from '../../hooks/useTopPageState';
 import { useMediumSize } from '../../styles/breakpoints';
 
@@ -120,6 +121,7 @@ const StateHandler = () => {
           )}
         </>
       )}
+      <VR/>
       </AppShell>
     </>
   );
