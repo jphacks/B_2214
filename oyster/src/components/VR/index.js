@@ -38,13 +38,13 @@ const VR = () => {
       <div className={classes.vrcontainer}>
         <a-scene embedded>
             {/* <a-text value={pageName} position="0 25 -100" width="500" align="center" zOffset="1">{console.log(props.pageName)}</a-text> */}
-            <a-entity environment="preset: default"></a-entity>
+            <a-entity environment="preset: default" position="0 -3 0"></a-entity>
+            {/* <a-entity light=" intensity: 1.5" position="0 100 0"></a-entity> */}
             <a-box color="red" position="0 2 -5" rotation="0 45 45" scale="2 2 2"></a-box>
-
 
             <a-entity
               gltf-model="test.gltf"
-              position= "0 5 0"
+              position= "0 -1s 0"
               scale="0.05 0.05 0.05"
             ></a-entity>
 
