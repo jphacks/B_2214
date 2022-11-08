@@ -6,3 +6,5 @@ torch
 torchvision
 numpy
 firebase-admin
+opencv-contrib-python
+tensorflow == 2.8.0
