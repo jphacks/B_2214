@@ -191,7 +191,8 @@ def predict2():
         floorplan[room_boundary==1] = 9
         floorplan[room_boundary==2] = 10
         floorplan_rgb = ind2rgb(floorplan)
-        result_img = floorplan_rgb/255.
+        floorplan_rgb = floorplan_rgb/255.
+    result_img = np.where(np.all(floorplan_rgb == [0, 0, 0], axis=-1), 1, 0)
     cv2.imwrite('test.png', result_img)
     randomstring = ''.join(random.choices(string.ascii_uppercase +
                              string.digits, k=20))
