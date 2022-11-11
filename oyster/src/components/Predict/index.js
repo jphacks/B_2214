@@ -2,7 +2,7 @@ import {
   createStyles,
   Container,
   SegmentedControl,
-  // Loader,
+  Loader,
   Text,
   Button,
   Stepper,
@@ -168,9 +168,8 @@ const Predict = () => {
             </>
           ) : (
             <>
-              <Text>AI機能は調整中です</Text>
-              {/* <Text>fetching ai prediction...</Text> */}
-              {/* <Loader /> */}
+              <Text>fetching ai prediction...</Text>
+              <Loader />
             </>
           )}
         </>
