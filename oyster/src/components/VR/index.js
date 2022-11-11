@@ -51,8 +51,13 @@ const VR = () => {
               scale="0.05 0.05 0.05"
               crossOrigin="anonymous"
             ></a-entity>
+            <a-entity id="rig" movement-controls="fly: false;">
+                <a-camera id="camera"></a-camera>
+                <a-entity hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+                <a-entity hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+            </a-entity>
 
-            <a-entity id="player" movement-controls="fly: false;">
+            {/* <a-entity id="player" movement-controls="fly: false;">
                 <a-entity id="camera" camera wasd-controls look-controls position="0 1.6 0"></a-entity>
                 <a-entity id="left-hand"
                     hand-controls="hand: left;"
@@ -70,7 +75,7 @@ const VR = () => {
                     daydream-controls="right"
                     gearvr-controls="right"
                 ></a-entity>
-            </a-entity>
+            </a-entity> */}
         </a-scene>
       </div>
     </div>
