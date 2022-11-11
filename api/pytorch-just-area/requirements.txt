@@ -1,0 +1,8 @@
+flask
+flask-cors
+gunicorn
+numpy
+torch
+torchvision
+numpy
+firebase-admin
