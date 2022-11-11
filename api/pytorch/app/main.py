@@ -5,7 +5,7 @@ from torch import nn
 import torchvision.transforms as transforms
 import torch.nn.functional as F
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 import urllib
 import sys
 sys.path.append("./machine_learning")
@@ -19,6 +19,7 @@ import os
 import numpy as np
 import tensorflow as tf
 import cv2
+import pyvista as pv
 
 cred = credentials.Certificate('./oyster-365512-firebase-adminsdk-722nb-debc2e59fa.json')
 firebase_admin.initialize_app(cred, {
@@ -29,7 +30,8 @@ bucket = storage.bucket()
 def upload_blob(source_file, destination_blob_name):
 
     blob = bucket.blob(destination_blob_name)
-    blob.upload_from_filename(source_file, content_type='image/png')
+    # blob.upload_from_filename(source_file, content_type='image/png')
+    blob.upload_from_filename(source_file)
     blob.make_public()
     url = blob.public_url
     print(url)
@@ -161,6 +163,7 @@ def predict2():
     try: urllib.URLopener().retrieve(url, filename)
     except: urllib.request.urlretrieve(url, filename)
     im = cv2.imread(filename)
+    shape = im.shape
     im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
     im = im.astype(np.float32)
     im = cv2.resize(im, dsize=(512,512)) / 255.
@@ -199,8 +202,66 @@ def predict2():
     imageurl = upload_blob('test2.png',"predictions2/"+randomstring+".png")
     print(imageurl)
 
+
+    # get image
+    image_file = "test2.png"
+    img = Image.open(filename)
+    mirror_img = ImageOps.mirror(img)
+    mirror_img.save('mirror.jpg')
+    mirror_img_file = "mirror.jpg"
+
+    # get width and height
+    # width = img.width
+    # height = img.height
+
+    # create a structured surface
+    x = np.arange(0, shape[1], 1)
+    y = np.arange(0, shape[0], 1)
+    x, y = np.meshgrid(x, y)
+
+    z = np.asarray(img)
+    z =np.flip(z, 0)/2
+
+    # write from here
+    new_img = cv2.imread(image_file)
+    #　グレースケール変換
+    imgray = cv2.cvtColor(new_img, cv2.COLOR_BGR2GRAY)
+    #　画像の二値化
+    ret, thresh = cv2.threshold(imgray, 127, 255, 0, cv2.THRESH_BINARY)
+    #　輪郭の抽出
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE) # Use cv2.CCOMP for two level hierarchy
+
+    # loop through the contours
+    for i, cnt in enumerate(contours):
+        # if the contour has no other contours inside of it
+        if hierarchy[0][i][3] != -1: # basically look for holes
+        # if the size of the contour is less than a threshold (noise) 面積を求めてそのサイズ調整
+            if cv2.contourArea(cnt) < 100:
+            # Fill the holes in the original image
+                cv2.drawContours(thresh, [cnt], 0, (255,255,255), -1)
+                # display result
+
+    thresh =np.flip(thresh)/3
+    thresh = cv2.resize(thresh,np.flip(shape[:2]))
+
+    curvsurf = pv.StructuredGrid(x, y, thresh)
+
+    # Map the curved surface to a plane - use best fitting plane
+    curvsurf.texture_map_to_plane(use_bounds=True,inplace=True)
+
+    tex = pv.read_texture(mirror_img_file)
+
+    plotter = pv.Plotter()
+    axes = pv.Axes(show_actor=True, actor_scale=1.0, line_width=5)
+    plotter.add_mesh(curvsurf.rotate_x(180, point=axes.origin, inplace=False), texture=tex)
+
+    # show or export
+    # plotter.show()
+    plotter.export_gltf("test.gltf", save_normals=True, inline_data=True, )
+    gltfurl = upload_blob('test.gltf',"3dmodels/"+randomstring+".gltf")
+
     prediction_result = {
-            "url": imageurl
+            "url": gltfurl
         }
 
     return jsonify({
