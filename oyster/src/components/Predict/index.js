@@ -87,14 +87,14 @@ const Predict = () => {
         body: JSON.stringify({ instances: [{ image: imageUrl }] }),
       };
       console.log(requestOptions);
-      // fetch(
-      //   'https://asia-northeast1-oyster-365512.cloudfunctions.net/madori-endpoint-api',
-      //   requestOptions,
-      // )
       fetch(
-        'http://localhost:8080/predict',
+        'https://asia-northeast1-oyster-365512.cloudfunctions.net/madori-endpoint-api',
         requestOptions,
       )
+      // fetch(
+      //   'http://localhost:8080/predict',
+      //   requestOptions,
+      // )
         .then((response) => response.json())
         .then((data) => {
           console.log('Success:', data);
@@ -107,9 +107,13 @@ const Predict = () => {
 
       setModel();
       fetch(
-        'http://localhost:8080/predict2',
+        'https://asia-northeast1-oyster-365512.cloudfunctions.net/madori-3d-endpoint-api',
         requestOptions,
       )
+      // fetch(
+      //   'http://localhost:8080/predict2',
+      //   requestOptions,
+      // )
         .then((response) => response.json())
         .then((data) => {
           console.log('Success:', data);
@@ -129,9 +133,9 @@ const Predict = () => {
 
   useEffect(() => {
     if(isMediumSize){
-      setPixelArea(prediction?.predictions[0].area*((smallImageSize.width*smallImageSize.height)/(predictionImageSize.width*predictionImageSize.height)));
+      setPixelArea(prediction?.prediction[0].area*((smallImageSize.width*smallImageSize.height)/(predictionImageSize.width*predictionImageSize.height)));
     }else{
-      setPixelArea(prediction?.predictions[0].area*((largeImageSize.width*largeImageSize.height)/(predictionImageSize.width*predictionImageSize.height)));
+      setPixelArea(prediction?.prediction[0].area*((largeImageSize.width*largeImageSize.height)/(predictionImageSize.width*predictionImageSize.height)));
     }
     console.log("prediction pixel area set")
   }, [isMediumSize, prediction]);
@@ -170,7 +174,7 @@ const Predict = () => {
         <>
           {prediction ? (
             <>
-              <img src={prediction?.predictions[0].url} width={imageSize.width} height={imageSize.height}/>
+              <img src={prediction?.prediction[0].url} width={imageSize.width} height={imageSize.height}/>
               <Button
                 size="xl"
                 color="blue"

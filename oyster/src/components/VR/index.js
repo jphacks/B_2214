@@ -46,7 +46,7 @@ const VR = () => {
 
             <a-entity
               // gltf-model="test.gltf"
-              gltf-model={model?.predictions[0].url}
+              gltf-model={model?.prediction[0].url}
               position= "0 2 -20"
               scale="0.05 0.05 0.05"
               crossOrigin="anonymous"
