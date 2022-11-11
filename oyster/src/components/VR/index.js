@@ -53,22 +53,25 @@ const VR = () => {
             ></a-entity>
 
             <a-entity id="rig">
-                <a-entity camera wasd-controls look-controls position="0 1.6 0"></a-entity>
-                <a-entity
+                {/* <a-entity id="camera" camera wasd-controls look-controls position="0 1.6 0"></a-entity>
+                <a-entity id="left-hand"
                     oculus-touch-controls="hand: left"
                     vive-controls="hand: left"
                     microsoft-motion-controls="hand: left"
                     daydream-controls="left"
                     gearvr-controls="left"
                 ></a-entity>
-                <a-entity
+                <a-entity id="right-hand"
                     oculus-touch-controls="hand: right"
                     vive-controls="hand: right"
                     microsoft-motion-controls="hand: right"
                     daydream-controls="right"
                     gearvr-controls="right"
                     oculus-thumbstick-controls
-                ></a-entity>
+                ></a-entity> */}
+              <a-camera position="0 1.6 0"></a-camera>
+              <a-entity oculus-touch-controls="hand: left" ></a-entity>
+              <a-entity oculus-touch-controls="hand: right" oculus-thumbstick-controls></a-entity>
             </a-entity>
         </a-scene>
       </div>
