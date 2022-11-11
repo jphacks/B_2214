@@ -53,8 +53,14 @@ const VR = () => {
             ></a-entity>
             <a-entity id="rig" movement-controls="fly: false;">
                 <a-camera id="camera"></a-camera>
-                <a-entity hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
-                <a-entity hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+                <a-entity
+                    hand-controls="hand: left;"
+                    oculus-touch-controls="hand: left"
+                ></a-entity>
+                <a-entity
+                    hand-controls="hand: right;"
+                    oculus-touch-controls="hand: right"
+                ></a-entity>
             </a-entity>
 
             {/* <a-entity id="player" movement-controls="fly: false;">
