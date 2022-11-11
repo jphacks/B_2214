@@ -33,9 +33,6 @@ ret, thresh = cv2.threshold(imgray, 127, 255, 0, cv2.THRESH_BINARY)
 #　輪郭の抽出
 contours, hierarchy = cv2.findContours(thresh, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE) # Use cv2.CCOMP for two level hierarchy
 
-# create an empty mask
-mask = np.zeros(new_img.shape[:2], dtype=np.uint8)
-
 # loop through the contours
 for i, cnt in enumerate(contours):
     # if the contour has no other contours inside of it
@@ -43,22 +40,20 @@ for i, cnt in enumerate(contours):
     # if the size of the contour is less than a threshold (noise) 面積を求めてそのサイズ調整
         if cv2.contourArea(cnt) < 100:
         # Fill the holes in the original image
-            cv2.drawContours(new_img, [cnt], 0, (255,255,255), -1)
+            cv2.drawContours(thresh, [cnt], 0, (255,255,255), -1)
             # display result
 
 # cv2.imshow("After", new_img)
 # cv2.waitKey()
 # cv2.destroyAllWindows()
 
-new_img3 =cv2.cvtColor(new_img, cv2.COLOR_BGR2GRAY)
-ret_2, thresh_2 = cv2.threshold(new_img3, 127, 255, 0, cv2.THRESH_BINARY)
-thresh_2 =np.flip(thresh_2, 0)/2
+thresh =np.flip(thresh, 0)/2
 
 # reduce noise of z
 
 # to here
 
-curvsurf = pv.StructuredGrid(x, y, thresh_2)
+curvsurf = pv.StructuredGrid(x, y, thresh)
 
 # Map the curved surface to a plane - use best fitting plane
 curvsurf.texture_map_to_plane(use_bounds=True,inplace=True)
