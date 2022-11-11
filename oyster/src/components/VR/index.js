@@ -38,7 +38,7 @@ const VR = () => {
   return (
     <div className={classes.root}>
       <div className={classes.vrcontainer}>
-        <a-scene embedded>
+        <a-scene>
             {/* <a-text value={pageName} position="0 25 -100" width="500" align="center" zOffset="1">{console.log(props.pageName)}</a-text> */}
             <a-entity environment="preset: default" position="0 -3 0"></a-entity>
             {/* <a-entity light=" intensity: 1.5" position="0 100 0"></a-entity> */}
