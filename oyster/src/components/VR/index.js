@@ -60,6 +60,7 @@ const VR = () => {
                     microsoft-motion-controls="hand: left"
                     daydream-controls="left"
                     gearvr-controls="left"
+                    oculus-thumbstick-controls
                 ></a-entity>
                 <a-entity id="right-hand"
                     oculus-touch-controls="hand: right"
