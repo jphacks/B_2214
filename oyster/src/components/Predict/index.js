@@ -2,7 +2,7 @@ import {
   createStyles,
   Container,
   SegmentedControl,
-  // Loader,
+  Loader,
   Text,
   Button,
   Stepper,
@@ -76,31 +76,35 @@ const Predict = () => {
   } = useTopPageState();
 
   useEffect(() => {
-    // if (predictionRequestUrl !== imageUrl) {
-    //   setPrediction();
-    //   const requestOptions = {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ instances: [{ image: imageUrl }] }),
-    //   };
-    //   console.log(requestOptions);
-    //   fetch(
-    //     'https://asia-northeast1-oyster-365512.cloudfunctions.net/madori-endpoint-api',
-    //     requestOptions,
-    //   )
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       console.log('Success:', data);
-    //       setPrediction(data);
-    //     })
-    //     .catch((error) => {
-    //       console.error('Error:', error);
-    //     });
-    //   setPredictionRequestUrl(imageUrl);
-    // }
-    setPrediction({"prediction":[{"area":100,"url":"https://firebasestorage.googleapis.com/v0/b/oyster-365512.appspot.com/o/predictions%2F01Y2NUTSA3GRTJ30JYLV.png?alt=media&token=89b062d2-cb98-41ee-88c5-e7cfe63e7cd9"}]});
+    if (predictionRequestUrl !== imageUrl) {
+      setPrediction();
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ instances: [{ image: imageUrl }] }),
+      };
+      console.log(requestOptions);
+      // fetch(
+      //   'https://asia-northeast1-oyster-365512.cloudfunctions.net/madori-endpoint-api',
+      //   requestOptions,
+      // )
+      fetch(
+        'http://localhost:8080/predict2',
+        requestOptions,
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Success:', data);
+          setPrediction(data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      setPredictionRequestUrl(imageUrl);
+    }
+    // setPrediction({"prediction":[{"area":100,"url":"https://firebasestorage.googleapis.com/v0/b/oyster-365512.appspot.com/o/predictions%2F01Y2NUTSA3GRTJ30JYLV.png?alt=media&token=89b062d2-cb98-41ee-88c5-e7cfe63e7cd9"}]});
   }, [imageUrl]);
 
   useEffect(() => {
@@ -164,9 +168,8 @@ const Predict = () => {
             </>
           ) : (
             <>
-              <Text>AI機能は調整中です</Text>
-              {/* <Text>fetching ai prediction...</Text> */}
-              {/* <Loader /> */}
+              <Text>fetching ai prediction...</Text>
+              <Loader />
             </>
           )}
         </>
