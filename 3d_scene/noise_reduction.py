@@ -3,7 +3,6 @@ import pyvista as pv
 from PIL import Image, ImageOps
 from matplotlib import pyplot as plt
 import cv2
-from skimage import util
 
 # get image
 image_file = "./output_img/1_100300486093_co.jpg"
@@ -47,22 +46,13 @@ for i, cnt in enumerate(contours):
             cv2.drawContours(new_img, [cnt], 0, (255,255,255), -1)
             # display result
 
+# cv2.imshow("After", new_img)
+# cv2.waitKey()
+# cv2.destroyAllWindows()
 
-cv2.imshow("Mask", mask)
-
-cv2.imshow("Img", new_img)
-# new_img2 = cv2.bitwise_not(new_img, image_file, mask=mask)
-
-cv2.imshow("Mask", mask)
-cv2.imshow("After", new_img)
-
-cv2.waitKey()
-cv2.destroyAllWindows()
-
-print(z.shape)
 new_img3 =cv2.cvtColor(new_img, cv2.COLOR_BGR2GRAY)
 ret_2, thresh_2 = cv2.threshold(new_img3, 127, 255, 0, cv2.THRESH_BINARY)
-print(thresh_2.shape)
+thresh_2 =np.flip(thresh_2, 0)/2
 
 # reduce noise of z
 
