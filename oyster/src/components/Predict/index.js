@@ -86,8 +86,12 @@ const Predict = () => {
         body: JSON.stringify({ instances: [{ image: imageUrl }] }),
       };
       console.log(requestOptions);
+      // fetch(
+      //   'https://asia-northeast1-oyster-365512.cloudfunctions.net/madori-endpoint-api',
+      //   requestOptions,
+      // )
       fetch(
-        'https://asia-northeast1-oyster-365512.cloudfunctions.net/madori-endpoint-api',
+        'http://localhost:8080/predict2',
         requestOptions,
       )
         .then((response) => response.json())

@@ -43,7 +43,7 @@ CORS(app)
 
 # Load segmentation model
 model = PSPNet(n_classes=2)
-state_dict = torch.load("./machine_learning/semantic_segmentation/weights/pspnet50_2.pth", map_location={'cuda:0': 'cpu'})
+state_dict = torch.load("./machine_learning/semantic_segmentation/weights/pspnet50_1022_0221_100.pth", map_location={'cuda:0': 'cpu'})
 model.load_state_dict(state_dict)
 model.eval()
 print("Loaded model")
@@ -150,7 +150,8 @@ def predict():
     return jsonify({
         "predictions": [prediction_result]
     })
-
+# Predict route
+@app.route("/predict2", methods=["POST"])
 def predict2():
     print("/predict request")
     req_json = request.get_json()
@@ -170,8 +171,8 @@ def predict2():
                     tf.compat.v1.local_variables_initializer()))
 
         # restore pretrained model
-        saver = tf.compat.v1.train.import_meta_graph('./DeepFloorplan/pretrained/pretrained_r3d.meta')
-        saver.restore(sess, './DeepFloorplan/pretrained/pretrained_r3d')
+        saver = tf.compat.v1.train.import_meta_graph('./machine_learning/DeepFloorplan/pretrained/pretrained_r3d.meta')
+        saver.restore(sess, './machine_learning/DeepFloorplan/pretrained/pretrained_r3d')
 
         # get default graph
         graph = tf.compat.v1.get_default_graph()
@@ -192,10 +193,10 @@ def predict2():
         floorplan[room_boundary==2] = 10
         floorplan_rgb = ind2rgb(floorplan)
     result_img = np.where(np.all(floorplan_rgb == [0, 0, 0], axis=-1), 0, 255)
-    cv2.imwrite('test.png', result_img)
+    cv2.imwrite('test2.png', result_img)
     randomstring = ''.join(random.choices(string.ascii_uppercase +
                              string.digits, k=20))
-    imageurl = upload_blob('test.png',"predictions/"+randomstring+".png")
+    imageurl = upload_blob('test2.png',"predictions2/"+randomstring+".png")
     print(imageurl)
 
     prediction_result = {
