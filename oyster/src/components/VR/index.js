@@ -5,7 +5,7 @@ import {
 // import { IconEraser } from '@tabler/icons';
 // import { useEffect, useState } from 'react';
 
-// import { useTopPageState } from '../../hooks/useTopPageState';
+import { useTopPageState } from '../../hooks/useTopPageState';
 // import { useMediumSize } from '../../styles/breakpoints';
 
 const useStyles = createStyles((theme) => ({
@@ -31,7 +31,9 @@ const VR = () => {
   const { classes } = useStyles();
 //   const theme = useMantineTheme();
 //   const isMediumSize = useMediumSize(theme);
-
+  const {
+    model
+  } = useTopPageState();
 
   return (
     <div className={classes.root}>
@@ -43,9 +45,11 @@ const VR = () => {
             <a-box color="red" position="0 2 -5" rotation="0 45 45" scale="2 2 2"></a-box>
 
             <a-entity
-              gltf-model="test.gltf"
-              position= "0 -1s 0"
+              // gltf-model="test.gltf"
+              gltf-model={model?.predictions[0].url}
+              position= "0 2 -20"
               scale="0.05 0.05 0.05"
+              crossOrigin="anonymous"
             ></a-entity>
 
             <a-entity id="player">

@@ -64,8 +64,8 @@ const Predict = () => {
     setManual,
     controlPanelValue,
     setControlPanelValue,
-    // predictionRequestUrl,
-    // setPredictionRequestUrl,
+    predictionRequestUrl,
+    setPredictionRequestUrl,
     prediction,
     setPrediction,
     setPixelArea,
@@ -73,6 +73,7 @@ const Predict = () => {
     smallImageSize,
     largeImageSize,
     predictionImageSize,
+    setModel
   } = useTopPageState();
 
   useEffect(() => {
@@ -91,7 +92,7 @@ const Predict = () => {
       //   requestOptions,
       // )
       fetch(
-        'http://localhost:8080/predict2',
+        'http://localhost:8080/predict',
         requestOptions,
       )
         .then((response) => response.json())
@@ -103,8 +104,22 @@ const Predict = () => {
           console.error('Error:', error);
         });
       setPredictionRequestUrl(imageUrl);
+
+      setModel();
+      fetch(
+        'http://localhost:8080/predict2',
+        requestOptions,
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Success:', data);
+          setModel(data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
     }
-    // setPrediction({"prediction":[{"area":100,"url":"https://firebasestorage.googleapis.com/v0/b/oyster-365512.appspot.com/o/predictions%2F01Y2NUTSA3GRTJ30JYLV.png?alt=media&token=89b062d2-cb98-41ee-88c5-e7cfe63e7cd9"}]});
+
   }, [imageUrl]);
 
   useEffect(() => {
@@ -114,9 +129,9 @@ const Predict = () => {
 
   useEffect(() => {
     if(isMediumSize){
-      setPixelArea(prediction?.prediction[0].area*((smallImageSize.width*smallImageSize.height)/(predictionImageSize.width*predictionImageSize.height)));
+      setPixelArea(prediction?.predictions[0].area*((smallImageSize.width*smallImageSize.height)/(predictionImageSize.width*predictionImageSize.height)));
     }else{
-      setPixelArea(prediction?.prediction[0].area*((largeImageSize.width*largeImageSize.height)/(predictionImageSize.width*predictionImageSize.height)));
+      setPixelArea(prediction?.predictions[0].area*((largeImageSize.width*largeImageSize.height)/(predictionImageSize.width*predictionImageSize.height)));
     }
     console.log("prediction pixel area set")
   }, [isMediumSize, prediction]);
@@ -155,7 +170,7 @@ const Predict = () => {
         <>
           {prediction ? (
             <>
-              <img src={prediction?.prediction[0].url} width={imageSize.width} height={imageSize.height}/>
+              <img src={prediction?.predictions[0].url} width={imageSize.width} height={imageSize.height}/>
               <Button
                 size="xl"
                 color="blue"
