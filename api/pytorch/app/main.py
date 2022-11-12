@@ -206,9 +206,9 @@ def predict2():
     # get image
     image_file = "test2.png"
     img = Image.open(filename)
-    mirror_img = ImageOps.mirror(img)
-    mirror_img.save('mirror.jpg')
-    mirror_img_file = "mirror.jpg"
+    # mirror_img = ImageOps.mirror(img)
+    # mirror_img.save('mirror.jpg')
+    # mirror_img_file = "mirror.jpg"
 
     # get width and height
     # width = img.width
@@ -247,41 +247,29 @@ def predict2():
     curvsurf = pv.StructuredGrid(x, y, thresh)
 
     black_coord = []
-    for coord in black_coord:
-        if coord[0] == 0:
-            if coord[1] == 0:
-                thresh[coord[0]][coord[1]+1] = 0
-                thresh[coord[0]+1][coord[1]] = 0
-                thresh[coord[0]+1][coord[1]+1] = 0
-            else:
-                thresh[coord[0]][coord[1]-1] = 0
-                thresh[coord[0]][coord[1]+1] = 0
-                thresh[coord[0]+1][coord[1]-1] = 0
-                thresh[coord[0]+1][coord[1]] = 0
-                thresh[coord[0]+1][coord[1]+1] = 0
-        elif coord[1] == 0:
-            thresh[coord[0]-1][coord[1]] = 0
-            thresh[coord[0]-1][coord[1]+1] = 0
-            thresh[coord[0]][coord[1]+1] = 0
-            thresh[coord[0]+1][coord[1]] = 0
-            thresh[coord[0]+1][coord[1]+1] = 0
-        else:
-            thresh[coord[0]-1][coord[1]-1] = 0
-            thresh[coord[0]-1][coord[1]] = 0
-            thresh[coord[0]-1][coord[1]+1] = 0
-            thresh[coord[0]][coord[1]-1] = 0
-            thresh[coord[0]][coord[1]+1] = 0
-            thresh[coord[0]+1][coord[1]-1] = 0
-            thresh[coord[0]+1][coord[1]] = 0
-            thresh[coord[0]+1][coord[1]+1] = 0
+    for i in range(1, thresh.shape[0]-1):
+        for j in  range(1, thresh.shape[1]-1):
+            if int(thresh[i][j]) == 0:
+                black_coord.append([i, j])
 
-    mirror_pad_path = 'mirror_pad.jpg'
-    cv2.imwrite(mirror_pad_path, thresh)
+    for coord in black_coord:
+        img[coord[0]-1][coord[1]-1] = [0, 0, 0]
+        img[coord[0]-1][coord[1]] = [0, 0, 0]
+        img[coord[0]-1][coord[1]+1] = [0, 0, 0]
+        img[coord[0]][coord[1]-1] = [0, 0, 0]
+        img[coord[0]][coord[1]+1] = [0, 0, 0]
+        img[coord[0]+1][coord[1]-1] = [0, 0, 0]
+        img[coord[0]+1][coord[1]] = [0, 0, 0]
+        img[coord[0]+1][coord[1]+1] = [0, 0, 0]
+
+    mirror_img = ImageOps.mirror(img)
+    mirror_img.save('mirror.jpg')
+    mirror_img_file = "mirror.jpg"
 
     # Map the curved surface to a plane - use best fitting plane
     curvsurf.texture_map_to_plane(use_bounds=True,inplace=True)
 
-    tex = pv.read_texture(mirror_pad_path)
+    tex = pv.read_texture(mirror_img_file)
 
     plotter = pv.Plotter()
     axes = pv.Axes(show_actor=True, actor_scale=1.0, line_width=5)
