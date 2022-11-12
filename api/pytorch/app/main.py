@@ -159,7 +159,7 @@ def predict2():
     req_json = request.get_json()
     url = req_json["instances"][0]["image"]
     print(url)
-    filename = "test.png"
+    filename = "predict2.png"
     try: urllib.URLopener().retrieve(url, filename)
     except: urllib.request.urlretrieve(url, filename)
     im = cv2.imread(filename)
@@ -206,9 +206,9 @@ def predict2():
     # get image
     image_file = "test2.png"
     img = Image.open(filename)
-    mirror_img = ImageOps.mirror(img)
-    mirror_img.save('mirror.jpg')
-    mirror_img_file = "mirror.jpg"
+    # mirror_img = ImageOps.mirror(img)
+    # mirror_img.save('mirror.jpg')
+    # mirror_img_file = "mirror.jpg"
 
     # get width and height
     # width = img.width
@@ -219,8 +219,8 @@ def predict2():
     y = np.arange(0, shape[0], 1)
     x, y = np.meshgrid(x, y)
 
-    z = np.asarray(img)
-    z =np.flip(z, 0)/2
+    # z = np.asarray(img)
+    # z =np.flip(z, 0)/2
 
     # write from here
     new_img = cv2.imread(image_file)
@@ -241,10 +241,29 @@ def predict2():
                 cv2.drawContours(thresh, [cnt], 0, (255,255,255), -1)
                 # display result
 
-    thresh =np.flip(thresh)/3
+    thresh =np.flip(thresh)/1.5
     thresh = cv2.resize(thresh,np.flip(shape[:2]))
 
     curvsurf = pv.StructuredGrid(x, y, thresh)
+
+    img = np.asarray(img)
+    img =np.flip(img)
+    padding_img = img.copy()
+    black_coord = []
+    for i in range(1, thresh.shape[0]-1):
+        for j in  range(1, thresh.shape[1]-1):
+            if int(thresh[i][j]) == 0:
+                black_coord.append([i, j])
+
+    for coord in black_coord:
+        for i in range(-2,3):
+            for j in range(-2,3):
+                padding_img[coord[0]+i,coord[1]+j] = [245, 245, 245]
+
+    padding_img =np.flip(padding_img)
+    mirror_img = ImageOps.mirror(Image.fromarray(padding_img))
+    mirror_img.save('mirror.png')
+    mirror_img_file = "mirror.png"
 
     # Map the curved surface to a plane - use best fitting plane
     curvsurf.texture_map_to_plane(use_bounds=True,inplace=True)
