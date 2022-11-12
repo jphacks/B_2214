@@ -246,10 +246,42 @@ def predict2():
 
     curvsurf = pv.StructuredGrid(x, y, thresh)
 
+    black_coord = []
+    for coord in black_coord:
+        if coord[0] == 0:
+            if coord[1] == 0:
+                thresh[coord[0]][coord[1]+1] = 0
+                thresh[coord[0]+1][coord[1]] = 0
+                thresh[coord[0]+1][coord[1]+1] = 0
+            else:
+                thresh[coord[0]][coord[1]-1] = 0
+                thresh[coord[0]][coord[1]+1] = 0
+                thresh[coord[0]+1][coord[1]-1] = 0
+                thresh[coord[0]+1][coord[1]] = 0
+                thresh[coord[0]+1][coord[1]+1] = 0
+        elif coord[1] == 0:
+            thresh[coord[0]-1][coord[1]] = 0
+            thresh[coord[0]-1][coord[1]+1] = 0
+            thresh[coord[0]][coord[1]+1] = 0
+            thresh[coord[0]+1][coord[1]] = 0
+            thresh[coord[0]+1][coord[1]+1] = 0
+        else:
+            thresh[coord[0]-1][coord[1]-1] = 0
+            thresh[coord[0]-1][coord[1]] = 0
+            thresh[coord[0]-1][coord[1]+1] = 0
+            thresh[coord[0]][coord[1]-1] = 0
+            thresh[coord[0]][coord[1]+1] = 0
+            thresh[coord[0]+1][coord[1]-1] = 0
+            thresh[coord[0]+1][coord[1]] = 0
+            thresh[coord[0]+1][coord[1]+1] = 0
+
+    mirror_pad_path = 'mirror_pad.jpg'
+    cv2.imwrite(mirror_pad_path, thresh)
+
     # Map the curved surface to a plane - use best fitting plane
     curvsurf.texture_map_to_plane(use_bounds=True,inplace=True)
 
-    tex = pv.read_texture(mirror_img_file)
+    tex = pv.read_texture(mirror_pad_path)
 
     plotter = pv.Plotter()
     axes = pv.Axes(show_actor=True, actor_scale=1.0, line_width=5)
