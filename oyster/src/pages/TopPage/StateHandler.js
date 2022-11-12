@@ -88,8 +88,10 @@ const StateHandler = () => {
               gradient={{ from: 'indigo', to: 'cyan', deg: 45 }}
               size="30px"
               weight={700}
+              onClick={() => window.location.reload(false)}
               style={{
                 marginLeft: '20px',
+                userSelect: 'none'
               }}
             >
               まどりーだー

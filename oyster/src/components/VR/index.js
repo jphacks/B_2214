@@ -44,8 +44,8 @@ const VR = () => {
         <a-scene embedded>
           <a-entity environment="preset: default" position="0 -3 0"></a-entity>
           <a-entity
-            gltf-model={model?.prediction[0].url}
-            position="5 0 -15"
+            gltf-model={model?.predictions[0].url}
+            position="5 1.5 -15"
             scale={`${scale} ${scale} ${scale}`}
             crossOrigin="anonymous"
           ></a-entity>
