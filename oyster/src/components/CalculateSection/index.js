@@ -42,6 +42,7 @@ const CaluculateSection = () => {
     setSelectedMetric,
     showResult,
     setShowResult,
+    manual,
   } = useTopPageState();
 
   const onClickCalc = () => {
@@ -57,10 +58,11 @@ const CaluculateSection = () => {
 
   return (
     <Container className={classes.container}>
+
       <div className={classes.numberInput}>
         <NumberInput
           type="number"
-          placeholder="area"
+          placeholder={manual?"囲んだ部分の面積":"専有面積"}
           value={inputArea}
           withAsterisk
           min={0}
