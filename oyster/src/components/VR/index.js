@@ -41,16 +41,11 @@ const VR = () => {
     <div className={classes.root}>
       <div className={classes.vrcontainer}>
         <a-scene embedded>
-            {/* <a-text value={pageName} position="0 25 -100" width="500" align="center" zOffset="1">{console.log(props.pageName)}</a-text> */}
             <a-entity environment="preset: default" position="0 -3 0"></a-entity>
-            {/* <a-entity light=" intensity: 1.5" position="0 100 0"></a-entity> */}
-            <a-box color="red" position="0 2 -5" rotation="0 45 45" scale="2 2 2"></a-box>
 
             <a-entity
-              // gltf-model="test.gltf"
               gltf-model={model?.prediction[0].url}
               position= "0 2 -5"
-              // scale="0.02 0.02 0.02"
               scale = {`${scale} ${scale} ${scale}`}
               crossOrigin="anonymous"
             ></a-entity>
@@ -65,26 +60,6 @@ const VR = () => {
                     oculus-touch-controls="hand: right"
                 ></a-entity>
             </a-entity>
-
-            {/* <a-entity id="player" movement-controls="fly: false;">
-                <a-entity id="camera" camera wasd-controls look-controls position="0 1.6 0"></a-entity>
-                <a-entity id="left-hand"
-                    hand-controls="hand: left;"
-                    oculus-touch-controls="hand: left"
-                    vive-controls="hand: left"
-                    microsoft-motion-controls="hand: left"
-                    daydream-controls="left"
-                    gearvr-controls="left"
-                ></a-entity>
-                <a-entity id="right-hand"
-                    hand-controls="hand: right;"
-                    oculus-touch-controls="hand: right"
-                    vive-controls="hand: right"
-                    microsoft-motion-controls="hand: right"
-                    daydream-controls="right"
-                    gearvr-controls="right"
-                ></a-entity>
-            </a-entity> */}
         </a-scene>
       </div>
     </div>

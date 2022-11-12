@@ -80,7 +80,10 @@ const StateHandler = () => {
           {predictionImageSize ? (
             <div className={classes.root}>
               {showResult ? (
-                <Result />
+                <>
+                  <Result />
+                  <VR/>
+                </>
               ) : manual ? (
                 <DrawCanvasSection />
               ) : (
@@ -102,7 +105,10 @@ const StateHandler = () => {
             <Grid className={classes.grid}>
               <Grid.Col span={8} className={classes.gridCol}>
                 {showResult ? (
-                  <Result />
+                  <>
+                    <Result />
+                    <VR/>
+                  </>
                 ) : manual ? (
                   <DrawCanvasSection />
                 ) : (
@@ -121,7 +127,6 @@ const StateHandler = () => {
           )}
         </>
       )}
-      <VR/>
       </AppShell>
     </>
   );
