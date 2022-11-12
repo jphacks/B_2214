@@ -64,10 +64,137 @@ new_img3 =cv2.cvtColor(new_img, cv2.COLOR_BGR2GRAY)
 ret_2, thresh_2 = cv2.threshold(new_img3, 127, 255, 0, cv2.THRESH_BINARY)
 print(thresh_2.shape)
 
+#　凸凹部分を除去したい
+thresh_3 = np.zeros_like(thresh_2)
+for i in range(1,510):
+     for j in range(1,510):
+         if (thresh_2[i][j-1] == 255 and thresh_2[i][j] == 0 and thresh_2[i][j+1] == 255) and ((int(thresh_2[i-1][j-1]) + int(thresh_2[i-1][j]) + int(thresh_2[i-1][j+1]) == 765) or (int(thresh_2[i+1][j-1]) + int(thresh_2[i+1][j]) + int(thresh_2[i+1][j+1])) == 765):
+             thresh_2[i][j] = 255
+         elif (thresh_2[i-1][j] == 255 and thresh_2[i][j] == 0 and thresh_2[i+1][j] == 255) and (int(thresh_2[i-1][j-1]) + int(thresh_2[i][j-1]) + int(thresh_2[i+1][j-1]) == 765 or int(thresh_2[i-1][j+1]) + int(thresh_2[i][j+1]) + int(thresh_2[i+1][j+1]) == 765):
+             thresh_2[i][j] = 255
+
+for i in range(1,510):
+   count = 0
+   for j in range(1,510):
+      if thresh_2[i][j] == 0 :
+         count += 1
+      else:
+         count = 0
+      if count == 2 :
+         if thresh_2[i+1][j] == 255 and (int(thresh_2[i-1][j-1]) + int(thresh_2[i][j-1]) + int(thresh_2[i+1][j-1]) + int(thresh_2[i+2][j-1]) == 1020) and (int(thresh_2[i-1][j+1]) + int(thresh_2[i][j+1]) + int(thresh_2[i+1][j+1]) + int(thresh_2[i+2][j+1]) == 0):
+            thresh_2[i-1][j] = 255
+            thresh_2[i][j] = 255
+            count = 0
+         elif thresh_2[i+1][j] == 255 and (int(thresh_2[i-1][j-1]) + int(thresh_2[i][j-1]) + int(thresh_2[i+1][j-1]) + int(thresh_2[i+2][j-1]) == 0) and (int(thresh_2[i-1][j+1]) + int(thresh_2[i][j+1]) + int(thresh_2[i+1][j+1]) + int(thresh_2[i+2][j+1]) == 1020):
+            thresh_2[i-1][j] = 255
+            thresh_2[i][j] = 255
+            count = 0
+         else:
+            count = 0
+
+for i in range(1,510):
+   count = 0
+   for j in range(1,510):
+      if thresh_2[i][j] == 0 :
+         count += 1
+      else:
+         count = 0
+      if count == 3 :
+         if thresh_2[i+1][j] == 255 and (int(thresh_2[i-3][j-1]) + int(thresh_2[i-2][j-1]) + int(thresh_2[i-1][j-1]) + int(thresh_2[i][j-1]) + int(thresh_2[i+1][j-1]) == 1275) and (int(thresh_2[i-3][j+1]) + int(thresh_2[i-2][j+1]) + int(thresh_2[i-1][j+1]) + int(thresh_2[i][j+1]) + int(thresh_2[i+1][j+1]) == 0):
+            thresh_2[i-2][j] = 255
+            thresh_2[i-1][j] = 255
+            thresh_2[i][j] = 255
+            count = 0
+         elif thresh_2[i+1][j] == 255 and (int(thresh_2[i-3][j-1]) + int(thresh_2[i-2][j-1]) + int(thresh_2[i-1][j-1]) + int(thresh_2[i][j-1]) + int(thresh_2[i+1][j-1]) == 0) and (int(thresh_2[i-3][j+1]) + int(thresh_2[i-2][j+1]) + int(thresh_2[i-1][j+1]) + int(thresh_2[i][j+1]) + int(thresh_2[i+1][j+1]) == 1275):
+            thresh_2[i-2][j] = 255
+            thresh_2[i-1][j] = 255
+            thresh_2[i][j] = 255
+            count = 0
+         else:
+            count = 0
+
+
+for i in range(1,510):
+   count = 0
+   for j in range(1,510):
+      if thresh_2[i][j] == 0 :
+         count += 1
+      else:
+         count = 0
+      if count == 4 :
+         if thresh_2[i+1][j] == 255 and (int(thresh_2[i-4][j-1]) + int(thresh_2[i-3][j-1]) + int(thresh_2[i-2][j-1]) + int(thresh_2[i-1][j-1]) + int(thresh_2[i][j-1]) + int(thresh_2[i+1][j-1]) == 1530) and (int(thresh_2[i-4][j+1]) + int(thresh_2[i-3][j+1]) + int(thresh_2[i-2][j+1]) + int(thresh_2[i-1][j+1]) + int(thresh_2[i][j+1]) + int(thresh_2[i+1][j+1]) == 0):
+            thresh_2[i-3][j] = 255
+            thresh_2[i-2][j] = 255
+            thresh_2[i-1][j] = 255
+            thresh_2[i][j] = 255
+            count = 0
+         elif thresh_2[i+1][j] == 255 and (int(thresh_2[i-4][j-1]) + int(thresh_2[i-3][j-1]) + int(thresh_2[i-2][j-1]) + int(thresh_2[i-1][j-1]) + int(thresh_2[i][j-1]) + int(thresh_2[i+1][j-1]) == 0) and (int(thresh_2[i-4][j+1]) + int(thresh_2[i-3][j+1]) + int(thresh_2[i-2][j+1]) + int(thresh_2[i-1][j+1]) + int(thresh_2[i][j+1]) + int(thresh_2[i+1][j+1]) == 1530):
+            thresh_2[i-3][j] = 255
+            thresh_2[i-2][j] = 255
+            thresh_2[i-1][j] = 255
+            thresh_2[i][j] = 255
+            count = 0
+         else:
+            count = 0
+
+for i in range(1,510):
+   count = 0
+   for j in range(1,510):
+      if thresh_2[i][j] == 0 :
+         count += 1
+      else:
+         count = 0
+      if count == 5 :
+         if thresh_2[i+1][j] == 255 and (int(thresh_2[i-5][j-1]) + int(thresh_2[i-4][j-1]) + int(thresh_2[i-3][j-1]) + int(thresh_2[i-2][j-1]) + int(thresh_2[i-1][j-1]) + int(thresh_2[i][j-1]) + int(thresh_2[i+1][j-1]) == 1785) and (int(thresh_2[i-5][j+1]) + int(thresh_2[i-4][j+1]) + int(thresh_2[i-3][j+1]) + int(thresh_2[i-2][j+1]) + int(thresh_2[i-1][j+1]) + int(thresh_2[i][j+1]) + int(thresh_2[i+1][j+1]) == 0):
+            thresh_2[i-4][j] = 255
+            thresh_2[i-3][j] = 255
+            thresh_2[i-2][j] = 255
+            thresh_2[i-1][j] = 255
+            thresh_2[i][j] = 255
+            count = 0
+
+         elif thresh_2[i+1][j] == 255 and (int(thresh_2[i-5][j-1]) + int(thresh_2[i-4][j-1]) + int(thresh_2[i-3][j-1]) + int(thresh_2[i-2][j-1]) + int(thresh_2[i-1][j-1]) + int(thresh_2[i][j-1]) + int(thresh_2[i+1][j-1]) == 0) and (int(thresh_2[i-5][j+1]) + int(thresh_2[i-4][j+1]) + int(thresh_2[i-3][j+1]) + int(thresh_2[i-2][j+1]) + int(thresh_2[i-1][j+1]) + int(thresh_2[i][j+1]) + int(thresh_2[i+1][j+1]) == 1785):
+            thresh_2[i-4][j] = 255
+            thresh_2[i-3][j] = 255
+            thresh_2[i-2][j] = 255
+            thresh_2[i-1][j] = 255
+            thresh_2[i][j] = 255
+            count = 0
+         else:
+            count = 0
+
+
+for i in range(1,510):
+   count = 0
+   for j in range(1,510):
+      if thresh_2[i][j] == 0 :
+         count += 1
+      else:
+         count = 0
+      if count == 6 :
+         if thresh_2[i+1][j] == 255 and (int(thresh_2[i-6][j-1]) +int(thresh_2[i-5][j-1]) + int(thresh_2[i-4][j-1]) + int(thresh_2[i-3][j-1]) + int(thresh_2[i-2][j-1]) + int(thresh_2[i-1][j-1]) + int(thresh_2[i][j-1]) + int(thresh_2[i+1][j-1]) == 2040) and (int(thresh_2[i-6][j+1]) +int(thresh_2[i-5][j+1]) + int(thresh_2[i-4][j+1]) + int(thresh_2[i-3][j+1]) + int(thresh_2[i-2][j+1]) + int(thresh_2[i-1][j+1]) + int(thresh_2[i][j+1]) + int(thresh_2[i+1][j+1]) == 0):
+            thresh_2[i-5][j] = 255
+            thresh_2[i-4][j] = 255
+            thresh_2[i-3][j] = 255
+            thresh_2[i-2][j] = 255
+            thresh_2[i-1][j] = 255
+            thresh_2[i][j] = 255
+            count = 0
+         elif thresh_2[i+1][j] == 255 and (int(thresh_2[i-6][j-1]) +int(thresh_2[i-5][j-1]) + int(thresh_2[i-4][j-1]) + int(thresh_2[i-3][j-1]) + int(thresh_2[i-2][j-1]) + int(thresh_2[i-1][j-1]) + int(thresh_2[i][j-1]) + int(thresh_2[i+1][j-1]) == 0) and (int(thresh_2[i-6][j+1]) +int(thresh_2[i-5][j+1]) + int(thresh_2[i-4][j+1]) + int(thresh_2[i-3][j+1]) + int(thresh_2[i-2][j+1]) + int(thresh_2[i-1][j+1]) + int(thresh_2[i][j+1]) + int(thresh_2[i+1][j+1]) == 2040):
+            thresh_2[i-5][j] = 255
+            thresh_2[i-4][j] = 255
+            thresh_2[i-3][j] = 255
+            thresh_2[i-2][j] = 255
+            thresh_2[i-1][j] = 255
+            thresh_2[i][j] = 255
+            count = 0
+         else:
+            count = 0
+
 # reduce noise of z
 
 # to here
-
+thresh_3 - np.flip(thresh_3)
 curvsurf = pv.StructuredGrid(x, y, thresh_2)
 
 # Map the curved surface to a plane - use best fitting plane
