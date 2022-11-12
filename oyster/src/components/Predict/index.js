@@ -5,7 +5,6 @@ import {
   Loader,
   Text,
   Button,
-  Stepper,
   useMantineTheme,
 } from '@mantine/core';
 import { IconEraser } from '@tabler/icons';
@@ -73,7 +72,7 @@ const Predict = () => {
     smallImageSize,
     largeImageSize,
     predictionImageSize,
-    setModel
+    setModel,
   } = useTopPageState();
 
   useEffect(() => {
@@ -91,10 +90,10 @@ const Predict = () => {
         'https://asia-northeast1-oyster-365512.cloudfunctions.net/madori-endpoint-api',
         requestOptions,
       )
-      // fetch(
-      //   'http://localhost:8080/predict',
-      //   requestOptions,
-      // )
+        // fetch(
+        //   'http://localhost:8080/predict',
+        //   requestOptions,
+        // )
         .then((response) => response.json())
         .then((data) => {
           console.log('Success:', data);
@@ -110,10 +109,10 @@ const Predict = () => {
         'https://asia-northeast1-oyster-365512.cloudfunctions.net/madori-3d-endpoint-api',
         requestOptions,
       )
-      // fetch(
-      //   'http://localhost:8080/predict2',
-      //   requestOptions,
-      // )
+        // fetch(
+        //   'http://localhost:8080/predict2',
+        //   requestOptions,
+        // )
         .then((response) => response.json())
         .then((data) => {
           console.log('Success:', data);
@@ -123,7 +122,6 @@ const Predict = () => {
           console.error('Error:', error);
         });
     }
-
   }, [imageUrl]);
 
   useEffect(() => {
@@ -132,35 +130,26 @@ const Predict = () => {
   }, [controlPanelValue]);
 
   useEffect(() => {
-    if(isMediumSize){
-      setPixelArea(prediction?.prediction[0].area*((smallImageSize.width*smallImageSize.height)/(predictionImageSize.width*predictionImageSize.height)));
-    }else{
-      setPixelArea(prediction?.prediction[0].area*((largeImageSize.width*largeImageSize.height)/(predictionImageSize.width*predictionImageSize.height)));
+    if (isMediumSize) {
+      setPixelArea(
+        prediction?.prediction[0].area *
+          ((smallImageSize.width * smallImageSize.height) /
+            (predictionImageSize.width * predictionImageSize.height)),
+      );
+    } else {
+      setPixelArea(
+        prediction?.prediction[0].area *
+          ((largeImageSize.width * largeImageSize.height) /
+            (predictionImageSize.width * predictionImageSize.height)),
+      );
     }
-    console.log("prediction pixel area set")
+    console.log('prediction pixel area set');
   }, [isMediumSize, prediction]);
 
-// if you use prediction to calc and change window size in result mode, it will not be correct
+  // if you use prediction to calc and change window size in result mode, it will not be correct
 
   return (
     <div className={classes.root}>
-      <div className={classes.stepContainer}>
-        <Stepper
-          orientation={isMediumSize ? 'vertical' : 'horizontal'}
-          size="md"
-          // size={isMediumSize ? 'xs' : 'md'}
-          active={1}
-          color="blue"
-        >
-          <Stepper.Step label="Step 1" description="Upload Image" className={classes.step}/>
-          <Stepper.Step
-            label="Step 2"
-            description="Surround Image and Input Area"
-            className={classes.step}
-          />
-          <Stepper.Step label="Step 3" description="Click Two Points" className={classes.step}/>
-        </Stepper>
-      </div>
       <Container className={classes.container}>
         <SegmentedControl
           color="blue"
@@ -174,7 +163,11 @@ const Predict = () => {
         <>
           {prediction ? (
             <>
-              <img src={prediction?.prediction[0].url} width={imageSize.width} height={imageSize.height}/>
+              <img
+                src={prediction?.prediction[0].url}
+                width={imageSize.width}
+                height={imageSize.height}
+              />
               <Button
                 size="xl"
                 color="blue"
