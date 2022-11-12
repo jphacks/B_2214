@@ -264,7 +264,7 @@ def predict2():
         thresh = np.rot90(thresh)
     thresh = np.rot90(thresh,2)
 
-    thresh =np.flip(thresh)/1.5
+    thresh =np.flip(thresh)/2
     thresh = cv2.resize(thresh,np.flip(shape[:2]))
 
     curvsurf = pv.StructuredGrid(x, y, thresh)

@@ -42,15 +42,15 @@ const VR = () => {
     <div className={classes.root}>
       <div className={classes.container}>
         <a-scene embedded>
-          <a-entity environment="preset: default" position="0 -3 0"></a-entity>
+          <a-entity environment="preset: default" position="0 -1 0"></a-entity>
           <a-entity
-            gltf-model={model?.predictions[0].url}
-            position="5 1.5 -15"
+            gltf-model={model?.prediction[0].url}
+            position={`5 ${scale*170} -15`}
             scale={`${scale} ${scale} ${scale}`}
             crossOrigin="anonymous"
           ></a-entity>
           <a-entity id="rig" movement-controls="fly: false;">
-            <a-camera id="camera"></a-camera>
+            <a-camera id="camera" position="0 1.6 0"></a-camera>
             <a-entity
               hand-controls="hand: left;"
               oculus-touch-controls="hand: left"
