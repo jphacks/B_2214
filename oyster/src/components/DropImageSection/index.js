@@ -1,27 +1,28 @@
 import {
   createStyles,
   Button,
-  Container,
   Text,
-  Progress,
   Grid,
   Image as ReactImage,
-  Stepper,
   useMantineTheme,
   Stack,
 } from '@mantine/core';
 import { IconRefresh } from '@tabler/icons';
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import { collection, doc } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import Resizer from "react-image-file-resizer";
+import { FilePond, registerPlugin } from 'react-filepond';
+import Resizer from 'react-image-file-resizer';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
 import { useMediumSize } from '../../styles/breakpoints';
 import sampleImage1 from '../../utils/SampleImage/sample1.jpeg';
 import sampleImage2 from '../../utils/SampleImage/sample2.jpeg';
 import { db, storage, STATE_CHANGED } from '../../utils/firebase';
+import 'filepond/dist/filepond.min.css';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -38,15 +39,9 @@ const useStyles = createStyles((theme) => ({
       padding: `${theme.spacing.xs}px ${theme.spacing.sm}px  ${theme.spacing.sm}px`,
     },
   },
-  stepContainer: {
-    margin: '0',
-    padding: `${theme.spacing.md}px`,
-  },
   buttonContainer: {
     margin: '0',
-    padding: `${theme.spacing.xl * 2}px ${theme.spacing.xl}px ${
-      theme.spacing.sm
-    }px`,
+    padding: `${theme.spacing.xl}px ${theme.spacing.xl}px ${theme.spacing.sm}px`,
     backgroundColor: theme.colors.gray[0],
     [theme.fn.smallerThan('md')]: {
       padding: `${theme.spacing.md}px ${theme.spacing.sm}px  ${theme.spacing.sm}px`,
@@ -59,20 +54,12 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'left',
     minHeight: '0px',
   },
-  step: {
-    minHeight: '0px',
-  },
-  container: {
+  filepondContainer: {
     height: '50vh',
     width: '50vw',
     backgroundColor: theme.colors.blue[0],
     padding: theme.spacing.lg,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    textAlign: 'center',
     borderRadius: theme.radius.md,
-    color: theme.colors.blue[6],
     fontWeight: '700',
     fontSize: theme.fontSizes.xl,
     cursor: 'pointer',
@@ -117,11 +104,17 @@ const DropImageSection = () => {
     setControlPanelValue,
     setPredictionImageFile,
     setPredictionImageSize,
+    predictionImageSize,
     setSmallImageFile,
     setSmallImageSize,
     setLargeImageFile,
     setLargeImageSize,
   } = useTopPageState();
+
+  registerPlugin(
+    FilePondPluginFileValidateType,
+    FilePondPluginFileValidateSize,
+  );
 
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
@@ -160,29 +153,31 @@ const DropImageSection = () => {
     const imgOriginal = new Image();
     imgOriginal.src = URL.createObjectURL(file);
     imgOriginal.onload = () => {
-
-      if(parseInt(imgOriginal.width)<250){
+      if (parseInt(imgOriginal.width) < 250) {
         setSmallImageFile(imgOriginal.src);
         setSmallImageSize({
           height: imgOriginal.height,
           width: imgOriginal.width,
-        })
+        });
         setLargeImageFile(imgOriginal.src);
         setLargeImageSize({
           height: imgOriginal.height,
           width: imgOriginal.width,
-        })
+        });
         setImageFile(imgOriginal.src);
         setImageSize({
           height: imgOriginal.height,
           width: imgOriginal.width,
-        })
-      }else if(parseInt(imgOriginal.width)>=250&&parseInt(imgOriginal.width)<=750){
+        });
+      } else if (
+        parseInt(imgOriginal.width) >= 250 &&
+        parseInt(imgOriginal.width) <= 750
+      ) {
         Resizer.imageFileResizer(
           file,
           250,
           500,
-          "JPEG",
+          'JPEG',
           100,
           0,
           (uri) => {
@@ -193,36 +188,36 @@ const DropImageSection = () => {
               setSmallImageSize({
                 height: smallImg.height,
                 width: smallImg.width,
-              })
-              if(isMediumSize){
+              });
+              if (isMediumSize) {
                 setImageFile(uri);
                 setImageSize({
                   height: smallImg.height,
                   width: smallImg.width,
-                })
+                });
               }
             };
           },
-          "base64",
+          'base64',
         );
         setLargeImageFile(imgOriginal.src);
         setLargeImageSize({
           height: imgOriginal.height,
           width: imgOriginal.width,
-        })
-        if(!isMediumSize){
+        });
+        if (!isMediumSize) {
           setImageFile(imgOriginal.src);
           setImageSize({
             height: imgOriginal.height,
             width: imgOriginal.width,
-          })
+          });
         }
-      }else{
+      } else {
         Resizer.imageFileResizer(
           file,
           250,
           500,
-          "JPEG",
+          'JPEG',
           100,
           0,
           (uri) => {
@@ -233,17 +228,17 @@ const DropImageSection = () => {
               setSmallImageSize({
                 height: smallImg.height,
                 width: smallImg.width,
-              })
-              if(isMediumSize){
+              });
+              if (isMediumSize) {
                 setImageFile(uri);
                 setImageSize({
                   height: smallImg.height,
                   width: smallImg.width,
-                })
+                });
               }
             };
           },
-          "base64",
+          'base64',
           0,
           0,
         );
@@ -251,7 +246,7 @@ const DropImageSection = () => {
           file,
           750,
           1000,
-          "JPEG",
+          'JPEG',
           100,
           0,
           (uri) => {
@@ -262,24 +257,22 @@ const DropImageSection = () => {
               setLargeImageSize({
                 height: largeImg.height,
                 width: largeImg.width,
-              })
-              if(!isMediumSize){
+              });
+              if (!isMediumSize) {
                 setImageFile(uri);
                 setImageSize({
                   height: largeImg.height,
                   width: largeImg.width,
-                })
+                });
               }
             };
           },
-          "base64",
+          'base64',
           0,
           0,
         );
-
       }
-    }
-
+    };
 
     // Get the file
     // const file = Array.from(e.target.files)[0];
@@ -290,7 +283,7 @@ const DropImageSection = () => {
     setUploading(true);
 
     // Starts the upload
-    const task = uploadBytesResumable(fileRef, file);  // we should be using resized file if the image is too big, but not implimented yet
+    const task = uploadBytesResumable(fileRef, file); // we should be using resized file if the image is too big, but not implimented yet
 
     // Listen to updates to upload task
     task.on(STATE_CHANGED, (snapshot) => {
@@ -319,33 +312,14 @@ const DropImageSection = () => {
         setControlPanelValue('ai');
         setShowResult(false);
       });
-
   };
 
   return (
-    <div className={imageSize ? classes.buttonContainer : classes.root}>
-      {!imageSize && (
-        <div className={classes.stepContainer}>
-          <Stepper
-            orientation={isMediumSize ? 'vertical' : 'horizontal'}
-            size="md"
-            // size={isMediumSize ? 'xs' : 'md'}
-            active={0}
-            color="blue"
-            classNames={classes}
-          >
-            <Stepper.Step label="Step 1" description="Upload Image" className={classes.step}/>
-            <Stepper.Step
-              label="Step 2"
-              description="Surround Image and Input Area"
-              className={classes.step}
-            />
-            <Stepper.Step label="Step 3" description="Click Two Points" className={classes.step}/>
-          </Stepper>
-        </div>
-      )}
-      <div {...getRootProps()}>
-        {imageSize ? (
+    <div
+      className={predictionImageSize ? classes.buttonContainer : classes.root}
+    >
+      {predictionImageSize ? (
+        <div {...getRootProps()}>
           <div className={classes.button}>
             <input {...getInputProps()} />
             <Button
@@ -357,9 +331,23 @@ const DropImageSection = () => {
               Change Image
             </Button>
           </div>
-        ) : (
-          <Container className={classes.container} tabIndex='1'>
-            {uploading ? (
+        </div>
+      ) : (
+        <FilePond
+          className={classes.filepondContainer}
+          onupdatefiles={(fileItems) => {
+            if (fileItems.length === 0) {
+              onRequestClear();
+            }
+            fileItems.map((fileItem) => uploadFile(fileItem.file));
+          }}
+          allowMultiple={false}
+          maxFiles={1}
+          acceptedFileTypes={['image/jpeg']}
+          maxFileSize="1MB"
+          labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span><br />(jpeg, ~1MB)'
+        />
+        /* {uploading ? (
               <Progress value={progress} color="blue" />
             ) : isDragActive ? (
               <Text>Drop the image here ...</Text>
@@ -371,21 +359,26 @@ const DropImageSection = () => {
                 the image{' '}<br />(jpeg, ~1MB)
               </Text>
               </>
-            )}
-          </Container>
-        )}
-      </div>
-      {!imageSize && (
+            )} */
+      )}
+
+      {!predictionImageSize && (
         <Stack>
-        <Text align="center" size={isMediumSize ? "20px" : "30px"} className={classes.exampleImage}>↓ or try with an example image</Text>
-        <Grid className={classes.imageContainer}>
-          <Grid.Col span={isMediumSize ? 6 : 4}>
-            <ReactImage src={sampleImage1} />
-          </Grid.Col>
-          <Grid.Col span={isMediumSize ? 6 : 4}>
-            <ReactImage src={sampleImage2} />
-          </Grid.Col>
-        </Grid>
+          <Text
+            align="center"
+            size={isMediumSize ? '20px' : '30px'}
+            className={classes.exampleImage}
+          >
+            ↓ or try with an example image
+          </Text>
+          <Grid className={classes.imageContainer}>
+            <Grid.Col span={isMediumSize ? 6 : 4}>
+              <ReactImage src={sampleImage1} />
+            </Grid.Col>
+            <Grid.Col span={isMediumSize ? 6 : 4}>
+              <ReactImage src={sampleImage2} />
+            </Grid.Col>
+          </Grid>
         </Stack>
       )}
     </div>
