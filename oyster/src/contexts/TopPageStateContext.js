@@ -25,7 +25,6 @@ export const TopPageStateProvider = (props) => {
   const [prediction, setPrediction] = useState();
   const [tool, setTool] = useState('Line');
   const [lineLength, setLineLength] = useState();
-  const [model, setModel] = useState();
   // metrics selection
   const options = [
     { value: 'm2', text: 'm^2' },
@@ -81,8 +80,6 @@ export const TopPageStateProvider = (props) => {
         setLineLength,
         // objects
         options,
-        model,
-        setModel
       }}
     >
       {children}

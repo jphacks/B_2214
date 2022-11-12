@@ -15,17 +15,13 @@ import { collection, doc } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { FilePond, registerPlugin } from 'react-filepond';
 import Resizer from "react-image-file-resizer";
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
-import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
 import { useMediumSize } from '../../styles/breakpoints';
 import sampleImage1 from '../../utils/SampleImage/sample1.jpeg';
 import sampleImage2 from '../../utils/SampleImage/sample2.jpeg';
 import { db, storage, STATE_CHANGED } from '../../utils/firebase';
-import 'filepond/dist/filepond.min.css';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -69,42 +65,20 @@ const useStyles = createStyles((theme) => ({
   container: {
     height: '50vh',
     width: '50vw',
-    // backgroundColor: theme.colors.blue[0],
+    backgroundColor: theme.colors.blue[0],
     padding: theme.spacing.lg,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     textAlign: 'center',
-    // borderRadius: theme.radius.md,
-    // color: theme.colors.blue[6],
-    // fontWeight: '700',
-    // fontSize: theme.fontSizes.xl,
-    // cursor: 'pointer',
-    // '&:hover': {
-    //   backgroundColor: theme.colors.blue[1],
-    // },
-    [theme.fn.smallerThan('md')]: {
-      padding: theme.spacing.sm,
-      width: '80vw',
+    borderRadius: theme.radius.md,
+    color: theme.colors.blue[6],
+    fontWeight: '700',
+    fontSize: theme.fontSizes.xl,
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: theme.colors.blue[1],
     },
-  },
-  filepondContainer: {
-    height: '50vh',
-    width: '50vw',
-    // backgroundColor: theme.colors.blue[0],
-    padding: theme.spacing.lg,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    textAlign: 'center',
-    // borderRadius: theme.radius.md,
-    // color: theme.colors.blue[6],
-    // fontWeight: '700',
-    // fontSize: theme.fontSizes.xl,
-    // cursor: 'pointer',
-    // '&:hover': {
-    //   backgroundColor: theme.colors.blue[1],
-    // },
     [theme.fn.smallerThan('md')]: {
       padding: theme.spacing.sm,
       width: '80vw',
@@ -143,14 +117,11 @@ const DropImageSection = () => {
     setControlPanelValue,
     setPredictionImageFile,
     setPredictionImageSize,
-    predictionImageSize,
     setSmallImageFile,
     setSmallImageSize,
     setLargeImageFile,
     setLargeImageSize,
   } = useTopPageState();
-
-  registerPlugin(FilePondPluginFileValidateType, FilePondPluginFileValidateSize);
 
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
@@ -352,8 +323,8 @@ const DropImageSection = () => {
   };
 
   return (
-    <div className={predictionImageSize ? classes.buttonContainer : classes.root}>
-      {!predictionImageSize && (
+    <div className={imageSize ? classes.buttonContainer : classes.root}>
+      {!imageSize && (
         <div className={classes.stepContainer}>
           <Stepper
             orientation={isMediumSize ? 'vertical' : 'horizontal'}
@@ -373,37 +344,22 @@ const DropImageSection = () => {
           </Stepper>
         </div>
       )}
-        {predictionImageSize ? (
-          <div {...getRootProps()}>
-            <div className={classes.button}>
-              <input {...getInputProps()} />
-              <Button
-                size="xl"
-                color="blue"
-                radius="lg"
-                rightIcon={<IconRefresh />}
-              >
-                Change Image
-              </Button>
-            </div>
+      <div {...getRootProps()}>
+        {imageSize ? (
+          <div className={classes.button}>
+            <input {...getInputProps()} />
+            <Button
+              size="xl"
+              color="blue"
+              radius="lg"
+              rightIcon={<IconRefresh />}
+            >
+              Change Image
+            </Button>
           </div>
         ) : (
-
-            <FilePond
-                className={classes.filepondContainer}
-                onupdatefiles={fileItems => {
-                  if (fileItems.length === 0) {
-                    onRequestClear()
-                  }
-                  fileItems.map(fileItem => uploadFile(fileItem.file));
-                }}
-                allowMultiple={false}
-                maxFiles={1}
-                acceptedFileTypes={['image/jpeg']}
-                maxFileSize="1MB"
-                labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span><br />(jpeg, ~1MB)'
-            />
-            /* {uploading ? (
+          <Container className={classes.container} tabIndex='1'>
+            {uploading ? (
               <Progress value={progress} color="blue" />
             ) : isDragActive ? (
               <Text>Drop the image here ...</Text>
@@ -415,11 +371,11 @@ const DropImageSection = () => {
                 the image{' '}<br />(jpeg, ~1MB)
               </Text>
               </>
-            )} */
-
+            )}
+          </Container>
         )}
-
-      {!predictionImageSize && (
+      </div>
+      {!imageSize && (
         <Stack>
         <Text align="center" size={isMediumSize ? "20px" : "30px"} className={classes.exampleImage}>↓ or try with an example image</Text>
         <Grid className={classes.imageContainer}>
