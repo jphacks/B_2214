@@ -8,6 +8,7 @@ import { FooterLinks } from '../../components/FooterLinks/FooterLinks';
 // import { Logo } from '../../components/Logo/logo';
 import Predict from '../../components/Predict';
 import Result from '../../components/Result';
+import VR from '../../components/VR';
 import { useTopPageState } from '../../hooks/useTopPageState';
 import { useMediumSize } from '../../styles/breakpoints';
 
@@ -79,7 +80,10 @@ const StateHandler = () => {
           {predictionImageSize ? (
             <div className={classes.root}>
               {showResult ? (
-                <Result />
+                <>
+                  <Result />
+                  <VR/>
+                </>
               ) : manual ? (
                 <DrawCanvasSection />
               ) : (
@@ -101,7 +105,10 @@ const StateHandler = () => {
             <Grid className={classes.grid}>
               <Grid.Col span={8} className={classes.gridCol}>
                 {showResult ? (
-                  <Result />
+                  <>
+                    <Result />
+                    <VR/>
+                  </>
                 ) : manual ? (
                   <DrawCanvasSection />
                 ) : (

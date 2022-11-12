@@ -73,6 +73,7 @@ const Predict = () => {
     smallImageSize,
     largeImageSize,
     predictionImageSize,
+    setModel
   } = useTopPageState();
 
   useEffect(() => {
@@ -86,14 +87,14 @@ const Predict = () => {
         body: JSON.stringify({ instances: [{ image: imageUrl }] }),
       };
       console.log(requestOptions);
-      // fetch(
-      //   'https://asia-northeast1-oyster-365512.cloudfunctions.net/madori-endpoint-api',
-      //   requestOptions,
-      // )
       fetch(
-        'http://localhost:8080/predict2',
+        'https://asia-northeast1-oyster-365512.cloudfunctions.net/madori-endpoint-api',
         requestOptions,
       )
+      // fetch(
+      //   'http://localhost:8080/predict',
+      //   requestOptions,
+      // )
         .then((response) => response.json())
         .then((data) => {
           console.log('Success:', data);
@@ -103,8 +104,26 @@ const Predict = () => {
           console.error('Error:', error);
         });
       setPredictionRequestUrl(imageUrl);
+
+      setModel();
+      fetch(
+        'https://asia-northeast1-oyster-365512.cloudfunctions.net/madori-3d-endpoint-api',
+        requestOptions,
+      )
+      // fetch(
+      //   'http://localhost:8080/predict2',
+      //   requestOptions,
+      // )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Success:', data);
+          setModel(data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
     }
-    // setPrediction({"prediction":[{"area":100,"url":"https://firebasestorage.googleapis.com/v0/b/oyster-365512.appspot.com/o/predictions%2F01Y2NUTSA3GRTJ30JYLV.png?alt=media&token=89b062d2-cb98-41ee-88c5-e7cfe63e7cd9"}]});
+
   }, [imageUrl]);
 
   useEffect(() => {
