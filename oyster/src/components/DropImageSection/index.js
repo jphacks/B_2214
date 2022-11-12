@@ -42,9 +42,7 @@ const useStyles = createStyles((theme) => ({
   },
   buttonContainer: {
     margin: '0',
-    padding: `${theme.spacing.xl * 2}px ${theme.spacing.xl}px ${
-      theme.spacing.sm
-    }px`,
+    padding: `${theme.spacing.xl}px ${theme.spacing.xl}px ${theme.spacing.sm}px`,
     backgroundColor: theme.colors.gray[0],
     [theme.fn.smallerThan('md')]: {
       padding: `${theme.spacing.md}px ${theme.spacing.sm}px  ${theme.spacing.sm}px`,
@@ -105,13 +103,14 @@ const DropImageSection = () => {
   const StyledFilePond = styled(FilePond)`
     & .filepond--panel-root {
       background-color: #e7f5ff;
+      display: flex-box;
       justify-content: center;
       align-items: center;
       text-aline: center;
     }
     & .filepond--drop-label {
       color: #228be6;
-      text-aline: center;
+      padding-top: 180px;
     }
   `;
 
