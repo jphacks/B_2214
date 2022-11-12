@@ -40,6 +40,7 @@ const VR = () => {
 
   return (
     <div className={classes.root}>
+      {model?<p></p>:<p>Generating 3D model...</p>}
       <div className={classes.container}>
         <a-scene embedded>
           <a-entity environment="preset: default" position="0 -1 0"></a-entity>

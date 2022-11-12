@@ -180,7 +180,7 @@ const Predict = () => {
             </>
           ) : (
             <>
-              <Text>fetching ai prediction...</Text>
+              <Text>fetching AI prediction...</Text>
               <Loader />
             </>
           )}
