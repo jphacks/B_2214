@@ -241,6 +241,29 @@ def predict2():
                 cv2.drawContours(thresh, [cnt], 0, (255,255,255), -1)
                 # display result
 
+    black = 0
+    white = 255
+    for _ in range(2):
+        for count_goal in range(1,10):
+            for i in range(1,len(thresh)-1):
+                count = 0
+                for j in range(len(thresh[0])):
+                    if thresh[i][j] == black:
+                        count += 1
+                    else:
+                        count = 0
+                    if count == count_goal and count_goal<=j<len(thresh[0])-2 and thresh[i][j+1] == white:
+                        up = 0
+                        down = 0
+                        for k in range(-1,count_goal+1):
+                            up += thresh[i-1][j-k]
+                            down += thresh[i+1][j-k]
+                        if (int(up) == white*(count_goal+2) and int(down) == black*(count_goal+2)) or (int(up) == black*(count_goal+2) and int(down) == white*(count_goal+2)):
+                            for l in range(count_goal):
+                                thresh[i][j-l] = white
+        thresh = np.rot90(thresh)
+    thresh = np.rot90(thresh,2)
+
     thresh =np.flip(thresh)/1.5
     thresh = cv2.resize(thresh,np.flip(shape[:2]))
 
