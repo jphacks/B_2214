@@ -1,4 +1,8 @@
-FROM python:3.9-slim
+FROM python:3.8
+
+RUN apt update && \
+    apt upgrade -y && \
+    apt install libgl1-mesa-dev -y
 
 # Install libraries
 COPY ./requirements.txt ./
