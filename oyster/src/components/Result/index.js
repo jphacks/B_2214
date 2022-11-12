@@ -1,17 +1,9 @@
 import Canvas from '@kazuyahirotsu/react-canvas-polygons';
-import {
-  Button,
-  createStyles,
-  Container,
-  Title,
-  Stepper,
-  useMantineTheme,
-} from '@mantine/core';
+import { Button, createStyles, Container, Title } from '@mantine/core';
 import { IconEraser } from '@tabler/icons';
 import { useEffect, useState } from 'react';
 
 import { useTopPageState } from '../../hooks/useTopPageState';
-import { useMediumSize } from '../../styles/breakpoints';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -23,15 +15,8 @@ const useStyles = createStyles((theme) => ({
     alignItems: 'center',
     backgroundColor: theme.colors.gray[0],
     [theme.fn.smallerThan('md')]: {
-      padding: `${theme.spacing.md}px ${theme.spacing.sm}px ${theme.spacing.md}px`,
+      padding: `${theme.spacing.md}px ${theme.spacing.md}px ${theme.spacing.sm}px`,
     },
-  },
-  stepContainer: {
-    margin: '0',
-    padding: `${theme.spacing.md}px`,
-  },
-  step: {
-    minHeight: '0px',
   },
   button: {
     gap: theme.spacing.md,
@@ -49,15 +34,13 @@ const useStyles = createStyles((theme) => ({
     alignItems: 'center',
     borderRadius: theme.radius.md,
     [theme.fn.smallerThan('md')]: {
-      padding: `${theme.spacing.xs}px ${theme.spacing.xs}px ${theme.spacing.xs}px`,
+      padding: `${theme.spacing.md}px`,
     },
   },
 }));
 
 const Result = (ref) => {
   const { classes } = useStyles();
-  const theme = useMantineTheme();
-  const isMediumSize = useMediumSize(theme);
   const { imageFile, imageSize, scale } = useTopPageState();
   const [tool, setTool] = useState('Polygon');
   const [lineLength, setLineLength] = useState();
@@ -96,23 +79,6 @@ const Result = (ref) => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.stepContainer}>
-        <Stepper
-          orientation={isMediumSize ? 'vertical' : 'horizontal'}
-          size="md"
-          // size={isMediumSize ? 'xs' : 'md'}
-          active={2}
-          color="blue"
-        >
-          <Stepper.Step label="Step 1" description="Upload Image" className={classes.step}/>
-          <Stepper.Step
-            label="Step 2"
-            description="Surround Image and Input Area"
-            className={classes.step}
-          />
-          <Stepper.Step label="Step 3" description="Click Two Points" className={classes.step}/>
-        </Stepper>
-      </div>
       {imageSize && (
         <Container className={classes.container}>
           <Canvas
