@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import {
   createStyles,
   Button,
@@ -56,28 +57,6 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'left',
     minHeight: '0px',
   },
-  container: {
-    height: '50vh',
-    width: '50vw',
-    // backgroundColor: theme.colors.blue[0],
-    padding: theme.spacing.lg,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    textAlign: 'center',
-    // borderRadius: theme.radius.md,
-    // color: theme.colors.blue[6],
-    // fontWeight: '700',
-    // fontSize: theme.fontSizes.xl,
-    // cursor: 'pointer',
-    // '&:hover': {
-    //   backgroundColor: theme.colors.blue[1],
-    // },
-    [theme.fn.smallerThan('md')]: {
-      padding: theme.spacing.sm,
-      width: '80vw',
-    },
-  },
   filepondContainer: {
     height: '50vh',
     width: '50vw',
@@ -100,9 +79,6 @@ const useStyles = createStyles((theme) => ({
       width: '80vw',
     },
   },
-  // fileImagePreview: {
-  //   backgroundColor: theme.colors.blue[0],
-  // },
   imageContainer: {
     backgroundColor: theme.colors.gray[0],
     padding: theme.spacing.lg,
@@ -126,6 +102,18 @@ const DropImageSection = () => {
   const { classes } = useStyles();
   const theme = useMantineTheme();
   const isMediumSize = useMediumSize(theme);
+  const StyledFilePond = styled(FilePond)`
+    & .filepond--panel-root {
+      background-color: #e7f5ff;
+      justify-content: center;
+      align-items: center;
+      text-aline: center;
+    }
+    & .filepond--drop-label {
+      color: #228be6;
+      text-aline: center;
+    }
+  `;
 
   const {
     imageSize,
@@ -365,7 +353,7 @@ const DropImageSection = () => {
           </div>
         </div>
       ) : (
-        <FilePond
+        <StyledFilePond
           className={classes.filepondContainer}
           onupdatefiles={(fileItems) => {
             if (fileItems.length === 0) {
@@ -377,7 +365,7 @@ const DropImageSection = () => {
           maxFiles={1}
           acceptedFileTypes={['image/jpeg']}
           maxFileSize="1MB"
-          labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span><br />(jpeg, ~1MB)'
+          labelIdle='Drag & Drop your files or <span class="filepond--label-action"}>Browse</span><br />(jpeg, ~1MB)'
         />
         /* {uploading ? (
               <Progress value={progress} color="blue" />
