@@ -17,7 +17,7 @@
   
 プロダクトへのリンク：https://oyster-ashy.vercel.app/  
 
-デモ動画：https://www.youtube.com/watch?v=TAjard4TFZY  
+デモ動画：https://photos.app.goo.gl/GcctJcZF8pinJvMk8  
 
 プレゼン資料：https://www.canva.com/design/DAFRt084ya0/G7m0v7MEFJ5vD3U2Ri_hog/view?utm_content=DAFRt084ya0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink
 
