@@ -27,7 +27,7 @@ import 'filepond/dist/filepond.min.css';
 const useStyles = createStyles((theme) => ({
   root: {
     width: '100%',
-    maxWidth: theme.breakpoints.xl,
+    maxWidth: 1920,
     margin: '0',
     padding: `${theme.spacing.xl}px`,
     display: 'flex',

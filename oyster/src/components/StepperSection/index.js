@@ -19,7 +19,7 @@ const useStyles = createStyles((theme) => ({
   // },
   stepContainer: {
     width: '100%',
-    maxWidth: theme.breakpoints.xl,
+    maxWidth: 1920,
     margin: '0',
     padding: `${theme.spacing.xl}px ${theme.spacing.xl}px ${theme.spacing.md}px`,
     display: 'flex',
