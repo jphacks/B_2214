@@ -47,25 +47,24 @@ const paletteColors = {
 
 export const lightTheme = {
   globalStyles: (theme) => ({
-    body: {
-      colorScheme: 'light',
-      dateFormat: 'yyyy年MM月dd日',
-      datesLocale: 'ja',
-      backgroundColor: paletteColors.grey[0],
-      white,
-      black,
-      colors: paletteColors,
-      primaryColor: 'primary',
-      defaultGradient: {
-        from: 'primary',
-        to: 'secondary',
-        deg: 90,
-      },
-      fontFamily: fonts.join(', '),
-      loader: 'dots',
-      breakpoints,
-      spacing,
+    colorScheme: 'light',
+    dateFormat: 'yyyy年MM月dd日',
+    datesLocale: 'ja',
+    backgroundColor: paletteColors.grey[0],
+    white,
+    black,
+    colors: paletteColors,
+    primaryColor: 'primary',
+    defaultGradient: {
+      from: 'primary',
+      to: 'secondary',
+      deg: 90,
     },
+    fontFamily: fonts.join(', '),
+    loader: 'dots',
+    breakpoints,
+    spacing,
+
     '.filepond--panel-root': {
       backgroundColor: '#e7f5ff',
     },
