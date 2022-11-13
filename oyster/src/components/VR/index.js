@@ -40,12 +40,13 @@ const VR = () => {
 
   return (
     <div className={classes.root}>
+      {model?<p></p>:<p>Generating 3D model...</p>}
       <div className={classes.container}>
         <a-scene embedded>
           <a-entity environment="preset: default" position="0 -1 0"></a-entity>
           <a-entity
             gltf-model={model?.prediction[0].url}
-            position={`5 ${scale*170} -15`}
+            position={`5 ${scale*112.5} -15`}
             scale={`${scale} ${scale} ${scale}`}
             crossOrigin="anonymous"
           ></a-entity>
