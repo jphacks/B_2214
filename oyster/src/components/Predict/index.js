@@ -180,8 +180,10 @@ const Predict = () => {
             </>
           ) : (
             <>
-              <Text>fetching AI prediction...</Text>
-              <Loader />
+              <Text>AI機能はサーバのコストの関係上停止中です。</Text>
+              <Text>Manual modeでのご利用をお願いします。</Text>
+              {/* <Text>fetching AI prediction...</Text>
+              <Loader /> */}
             </>
           )}
         </>

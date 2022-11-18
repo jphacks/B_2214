@@ -1,5 +1,6 @@
 import {
   createStyles,
+  Text,
   // useMantineTheme,
 } from '@mantine/core';
 
@@ -40,14 +41,20 @@ const VR = () => {
 
   return (
     <div className={classes.root}>
-      {model?<p></p>:<p>Generating 3D model...</p>}
+      <Text>3Dモデル生成機能はサーバのコストの関係上停止中です。</Text>
+      <Text>こちらではサンプルのモデルをご覧いただくことができます</Text>
+      {/* {model?<p></p>:<p>Generating 3D model...</p>} */}
       <div className={classes.container}>
         <a-scene embedded>
           <a-entity environment="preset: default" position="0 -1 0"></a-entity>
           <a-entity
-            gltf-model={model?.prediction[0].url}
-            position={`5 ${scale*112.5} -15`}
-            scale={`${scale} ${scale} ${scale}`}
+            // gltf-model={model?.prediction[0].url}
+            gltf-model="sample.gltf"
+
+            position={`5 ${0.029248644234892315*112.5} -15`}
+            scale={`${0.029248644234892315} ${0.029248644234892315} ${0.029248644234892315}`}
+            // position={`5 ${scale*112.5} -15`}
+            // scale={`${scale} ${scale} ${scale}`}
             crossOrigin="anonymous"
           ></a-entity>
           <a-entity id="rig" movement-controls="fly: false;">
